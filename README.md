@@ -20,7 +20,7 @@ by Peter Bruce, Andrew Bruce, and <a href="https://www.amazon.com/Peter-Gedeck/e
    <li>ISBN-13: 064-2572242435</li>
     <li>Buy on 
      <a href="https://www.amazon.com/AI-Assisted-Statistics-Data-Scientists-Essential/dp/B0GK713BRM/">Amazon</a></li>
-   <!-- <li>Errata: <a href="http://oreilly.com/catalog/errata.csp?isbn=9781492072942">http://oreilly.com/catalog/errata.csp?isbn=9781492072942</a></li>-->
+   <li>Errata: <a href="http://oreilly.com/catalog/errata.csp?isbn=0642572242428">http://oreilly.com/catalog/errata.csp?isbn=0642572242428</a></li>
    </ul>
     </td>
   </tr>
