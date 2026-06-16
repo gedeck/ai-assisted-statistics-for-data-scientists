@@ -8,7 +8,7 @@ Code repository for O'Reilly book
 # Code repository
 <table width='100%'>
  <tr>
-  <td><img src='images/OReilly-english.png' width=300></td>
+  <td><img src='images/OReilly-3e-english.png' width=300></td>
   <td>
    <p><b>AI-Assisted Statistics for Data Scientists:</b></p>
 
@@ -17,7 +17,7 @@ by Peter Bruce, Andrew Bruce, and <a href="https://www.amazon.com/Peter-Gedeck/e
 
    <ul>
     <li>Publisher: <a href="https://learning.oreilly.com/library/view/ai-assisted-statistics-for/0642572242435/">O'Reilly Media</a>; 3rd edition, early release (March, 2026)</li>
-   <li>ISBN-13: 064-2572242435</li>
+   <li>ISBN-13: 979-8341666283</li>
     <li>Buy on 
      <a href="https://www.amazon.com/AI-Assisted-Statistics-Data-Scientists-Essential/dp/B0GK713BRM/">Amazon</a></li>
    <!-- <li>Errata: <a href="http://oreilly.com/catalog/errata.csp?isbn=9781492072942">http://oreilly.com/catalog/errata.csp?isbn=9781492072942</a></li>-->
