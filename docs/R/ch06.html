@@ -207,19 +207,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
   <li><a href="#statistical-machine-learning" id="toc-statistical-machine-learning" class="nav-link active" data-scroll-target="#statistical-machine-learning">Statistical Machine Learning</a>
+  <ul>
+  <li><a href="#k-nearest-neighbors" id="toc-k-nearest-neighbors" class="nav-link" data-scroll-target="#k-nearest-neighbors">K-Nearest Neighbors</a>
   <ul class="collapse">
-  <li><a href="#k-nearest-neighbors" id="toc-k-nearest-neighbors" class="nav-link" data-scroll-target="#k-nearest-neighbors">K-Nearest Neighbors</a></li>
-  <li><a href="#tree-models" id="toc-tree-models" class="nav-link" data-scroll-target="#tree-models">Tree Models</a></li>
-  <li><a href="#bagging-and-the-random-forest" id="toc-bagging-and-the-random-forest" class="nav-link" data-scroll-target="#bagging-and-the-random-forest">Bagging and the Random Forest</a></li>
-  <li><a href="#boosting" id="toc-boosting" class="nav-link" data-scroll-target="#boosting">Boosting</a></li>
+  <li><a href="#a-small-example-predicting-loan-default" id="toc-a-small-example-predicting-loan-default" class="nav-link" data-scroll-target="#a-small-example-predicting-loan-default">A Small Example: Predicting Loan Default</a></li>
+  <li><a href="#standardization-normalization-z-scores" id="toc-standardization-normalization-z-scores" class="nav-link" data-scroll-target="#standardization-normalization-z-scores">Standardization (Normalization, z-Scores)</a></li>
+  <li><a href="#knn-as-a-feature-engine" id="toc-knn-as-a-feature-engine" class="nav-link" data-scroll-target="#knn-as-a-feature-engine">KNN as a Feature Engine</a></li>
+  </ul></li>
+  <li><a href="#tree-models" id="toc-tree-models" class="nav-link" data-scroll-target="#tree-models">Tree Models</a>
+  <ul class="collapse">
+  <li><a href="#a-simple-example" id="toc-a-simple-example" class="nav-link" data-scroll-target="#a-simple-example">A Simple Example</a></li>
+  </ul></li>
+  <li><a href="#bagging-and-the-random-forest" id="toc-bagging-and-the-random-forest" class="nav-link" data-scroll-target="#bagging-and-the-random-forest">Bagging and the Random Forest</a>
+  <ul class="collapse">
+  <li><a href="#random-forest" id="toc-random-forest" class="nav-link" data-scroll-target="#random-forest">Random Forest</a></li>
+  <li><a href="#variable-importance" id="toc-variable-importance" class="nav-link" data-scroll-target="#variable-importance">Variable Importance</a></li>
+  </ul></li>
+  <li><a href="#boosting" id="toc-boosting" class="nav-link" data-scroll-target="#boosting">Boosting</a>
+  <ul class="collapse">
+  <li><a href="#xgboost" id="toc-xgboost" class="nav-link" data-scroll-target="#xgboost">XGBoost</a></li>
+  <li><a href="#regularization-avoiding-overfitting" id="toc-regularization-avoiding-overfitting" class="nav-link" data-scroll-target="#regularization-avoiding-overfitting">Regularization: Avoiding Overfitting</a></li>
+  <li><a href="#hyperparameters-and-cross-validation" id="toc-hyperparameters-and-cross-validation" class="nav-link" data-scroll-target="#hyperparameters-and-cross-validation">Hyperparameters and Cross-Validation</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#supplementary-material" id="toc-supplementary-material" class="nav-link" data-scroll-target="#supplementary-material">Supplementary Material</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#figure-6-2.-knn-prediction-of-loan-default-using-two-variables-debt-to-income-ratio-and-loan-payment-to-income-ratio" id="toc-figure-6-2.-knn-prediction-of-loan-default-using-two-variables-debt-to-income-ratio-and-loan-payment-to-income-ratio" class="nav-link" data-scroll-target="#figure-6-2.-knn-prediction-of-loan-default-using-two-variables-debt-to-income-ratio-and-loan-payment-to-income-ratio">Figure 6-2. KNN prediction of loan default using two variables: debt-to-income ratio and loan-payment-to-income ratio</a></li>
   <li><a href="#figure-6-4.-the-first-five-rules-for-a-simple-tree-model-fit-to-the-loan-data" id="toc-figure-6-4.-the-first-five-rules-for-a-simple-tree-model-fit-to-the-loan-data" class="nav-link" data-scroll-target="#figure-6-4.-the-first-five-rules-for-a-simple-tree-model-fit-to-the-loan-data">Figure 6-4. The first five rules for a simple tree model fit to the loan data</a></li>
   <li><a href="#figure-6-5.-gini-impurity-and-entropy-measures" id="toc-figure-6-5.-gini-impurity-and-entropy-measures" class="nav-link" data-scroll-target="#figure-6-5.-gini-impurity-and-entropy-measures">Figure 6-5. Gini impurity and entropy measures</a></li>
@@ -262,7 +279,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Location of the data files. Adjust this path if you keep the data</span></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># files in a different directory.</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="ot">&lt;-</span> <span class="st">'../../data'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="ot">&lt;-</span> <span class="st">'../data'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="statistical-machine-learning" class="level2">
 <h2 class="anchored" data-anchor-id="statistical-machine-learning">Statistical Machine Learning</h2>

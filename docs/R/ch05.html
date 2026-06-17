@@ -207,20 +207,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
   <li><a href="#classification" id="toc-classification" class="nav-link active" data-scroll-target="#classification">Classification</a>
+  <ul>
+  <li><a href="#naive-bayes" id="toc-naive-bayes" class="nav-link" data-scroll-target="#naive-bayes">Naive Bayes</a>
   <ul class="collapse">
-  <li><a href="#naive-bayes" id="toc-naive-bayes" class="nav-link" data-scroll-target="#naive-bayes">Naive Bayes</a></li>
-  <li><a href="#discriminant-analysis" id="toc-discriminant-analysis" class="nav-link" data-scroll-target="#discriminant-analysis">Discriminant Analysis</a></li>
-  <li><a href="#logistic-regression" id="toc-logistic-regression" class="nav-link" data-scroll-target="#logistic-regression">Logistic Regression</a></li>
-  <li><a href="#evaluating-classification-models" id="toc-evaluating-classification-models" class="nav-link" data-scroll-target="#evaluating-classification-models">Evaluating Classification Models</a></li>
-  <li><a href="#strategies-for-imbalanced-data" id="toc-strategies-for-imbalanced-data" class="nav-link" data-scroll-target="#strategies-for-imbalanced-data">Strategies for Imbalanced Data</a></li>
+  <li><a href="#the-naive-solution" id="toc-the-naive-solution" class="nav-link" data-scroll-target="#the-naive-solution">The Naive Solution</a></li>
+  <li><a href="#numeric-predictor-variables" id="toc-numeric-predictor-variables" class="nav-link" data-scroll-target="#numeric-predictor-variables">Numeric Predictor Variables</a></li>
+  </ul></li>
+  <li><a href="#discriminant-analysis" id="toc-discriminant-analysis" class="nav-link" data-scroll-target="#discriminant-analysis">Discriminant Analysis</a>
+  <ul class="collapse">
+  <li><a href="#a-simple-example" id="toc-a-simple-example" class="nav-link" data-scroll-target="#a-simple-example">A Simple Example</a></li>
+  </ul></li>
+  <li><a href="#logistic-regression" id="toc-logistic-regression" class="nav-link" data-scroll-target="#logistic-regression">Logistic Regression</a>
+  <ul class="collapse">
+  <li><a href="#logistic-regression-and-the-glm" id="toc-logistic-regression-and-the-glm" class="nav-link" data-scroll-target="#logistic-regression-and-the-glm">Logistic Regression and the GLM</a></li>
+  <li><a href="#predicted-values-from-logistic-regression" id="toc-predicted-values-from-logistic-regression" class="nav-link" data-scroll-target="#predicted-values-from-logistic-regression">Predicted Values from Logistic Regression</a></li>
+  <li><a href="#assessing-the-model" id="toc-assessing-the-model" class="nav-link" data-scroll-target="#assessing-the-model">Assessing the Model</a></li>
+  </ul></li>
+  <li><a href="#evaluating-classification-models" id="toc-evaluating-classification-models" class="nav-link" data-scroll-target="#evaluating-classification-models">Evaluating Classification Models</a>
+  <ul class="collapse">
+  <li><a href="#confusion-matrix" id="toc-confusion-matrix" class="nav-link" data-scroll-target="#confusion-matrix">Confusion Matrix</a></li>
+  <li><a href="#precision-recall-and-specificity" id="toc-precision-recall-and-specificity" class="nav-link" data-scroll-target="#precision-recall-and-specificity">Precision, Recall, and Specificity</a></li>
+  <li><a href="#roc-curve" id="toc-roc-curve" class="nav-link" data-scroll-target="#roc-curve">ROC Curve</a></li>
+  <li><a href="#auc" id="toc-auc" class="nav-link" data-scroll-target="#auc">AUC</a></li>
+  </ul></li>
+  <li><a href="#strategies-for-imbalanced-data" id="toc-strategies-for-imbalanced-data" class="nav-link" data-scroll-target="#strategies-for-imbalanced-data">Strategies for Imbalanced Data</a>
+  <ul class="collapse">
+  <li><a href="#undersampling" id="toc-undersampling" class="nav-link" data-scroll-target="#undersampling">Undersampling</a></li>
+  <li><a href="#oversampling-and-updown-weighting" id="toc-oversampling-and-updown-weighting" class="nav-link" data-scroll-target="#oversampling-and-updown-weighting">Oversampling and Up/Down Weighting</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#supplementary-material" id="toc-supplementary-material" class="nav-link" data-scroll-target="#supplementary-material">Supplementary Material</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#figure-5-2.-graph-of-the-logit-function-that-maps-a-probability-to-a-scale-suitable-for-a-linear-model" id="toc-figure-5-2.-graph-of-the-logit-function-that-maps-a-probability-to-a-scale-suitable-for-a-linear-model" class="nav-link" data-scroll-target="#figure-5-2.-graph-of-the-logit-function-that-maps-a-probability-to-a-scale-suitable-for-a-linear-model">Figure 5-2. Graph of the logit function that maps a probability to a scale suitable for a linear model</a></li>
   <li><a href="#how-to-control-the-order-of-the-classes-in-python" id="toc-how-to-control-the-order-of-the-classes-in-python" class="nav-link" data-scroll-target="#how-to-control-the-order-of-the-classes-in-python">How to control the order of the classes in Python</a></li>
   <li><a href="#figure-5-3.-the-relationship-between-the-odds-ratio-and-the-log-odds-ratio" id="toc-figure-5-3.-the-relationship-between-the-odds-ratio-and-the-log-odds-ratio" class="nav-link" data-scroll-target="#figure-5-3.-the-relationship-between-the-odds-ratio-and-the-log-odds-ratio">Figure 5-3. The relationship between the odds ratio and the log-odds ratio</a></li>
@@ -269,7 +291,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Location of the data files. Adjust this path if you keep the data</span></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># files in a different directory.</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="ot">&lt;-</span> <span class="st">'../../data'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="ot">&lt;-</span> <span class="st">'../data'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="classification" class="level2">
 <h2 class="anchored" data-anchor-id="classification">Classification</h2>

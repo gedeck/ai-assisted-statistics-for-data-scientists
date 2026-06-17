@@ -207,21 +207,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
   <li><a href="#data-and-sampling-distributions" id="toc-data-and-sampling-distributions" class="nav-link active" data-scroll-target="#data-and-sampling-distributions">Data and Sampling Distributions</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#sampling-distribution-of-a-statistic" id="toc-sampling-distribution-of-a-statistic" class="nav-link" data-scroll-target="#sampling-distribution-of-a-statistic">Sampling Distribution of a Statistic</a></li>
   <li><a href="#the-bootstrap" id="toc-the-bootstrap" class="nav-link" data-scroll-target="#the-bootstrap">The Bootstrap</a></li>
-  <li><a href="#normal-distribution" id="toc-normal-distribution" class="nav-link" data-scroll-target="#normal-distribution">Normal Distribution</a></li>
+  <li><a href="#normal-distribution" id="toc-normal-distribution" class="nav-link" data-scroll-target="#normal-distribution">Normal Distribution</a>
+  <ul class="collapse">
+  <li><a href="#standard-normal-and-qq-plots" id="toc-standard-normal-and-qq-plots" class="nav-link" data-scroll-target="#standard-normal-and-qq-plots">Standard Normal and QQ-Plots</a></li>
+  </ul></li>
   <li><a href="#long-tailed-distributions" id="toc-long-tailed-distributions" class="nav-link" data-scroll-target="#long-tailed-distributions">Long-Tailed Distributions</a></li>
   <li><a href="#binomial-distribution" id="toc-binomial-distribution" class="nav-link" data-scroll-target="#binomial-distribution">Binomial Distribution</a></li>
-  <li><a href="#poisson-and-related-distributions" id="toc-poisson-and-related-distributions" class="nav-link" data-scroll-target="#poisson-and-related-distributions">Poisson and Related Distributions</a></li>
+  <li><a href="#poisson-and-related-distributions" id="toc-poisson-and-related-distributions" class="nav-link" data-scroll-target="#poisson-and-related-distributions">Poisson and Related Distributions</a>
+  <ul class="collapse">
+  <li><a href="#poisson-distributions" id="toc-poisson-distributions" class="nav-link" data-scroll-target="#poisson-distributions">Poisson Distributions</a></li>
+  <li><a href="#exponential-distribution" id="toc-exponential-distribution" class="nav-link" data-scroll-target="#exponential-distribution">Exponential Distribution</a></li>
+  <li><a href="#weibull-distribution" id="toc-weibull-distribution" class="nav-link" data-scroll-target="#weibull-distribution">Weibull Distribution</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#supplementary-material" id="toc-supplementary-material" class="nav-link" data-scroll-target="#supplementary-material">Supplementary Material</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#figure-2-9-bootstrap-confidence-interval-for-the-annual-income-of-loan-applicants-based-on-a-sample-of-20" id="toc-figure-2-9-bootstrap-confidence-interval-for-the-annual-income-of-loan-applicants-based-on-a-sample-of-20" class="nav-link" data-scroll-target="#figure-2-9-bootstrap-confidence-interval-for-the-annual-income-of-loan-applicants-based-on-a-sample-of-20">Figure 2-9 Bootstrap confidence interval for the annual income of loan applicants, based on a sample of 20</a></li>
   <li><a href="#visualization-of-distributions" id="toc-visualization-of-distributions" class="nav-link" data-scroll-target="#visualization-of-distributions">Visualization of Distributions</a>
   <ul class="collapse">
@@ -263,7 +271,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Location of the data files. Adjust this path if you keep the data</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># files in a different directory.</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="ot">&lt;-</span> <span class="st">'../../data'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="ot">&lt;-</span> <span class="st">'../data'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="data-and-sampling-distributions" class="level2">
 <h2 class="anchored" data-anchor-id="data-and-sampling-distributions">Data and Sampling Distributions</h2>

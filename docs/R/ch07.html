@@ -207,20 +207,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
   <li><a href="#unsupervised-learning" id="toc-unsupervised-learning" class="nav-link active" data-scroll-target="#unsupervised-learning">Unsupervised Learning</a>
+  <ul>
+  <li><a href="#principal-components-analysis" id="toc-principal-components-analysis" class="nav-link" data-scroll-target="#principal-components-analysis">Principal Components Analysis</a>
   <ul class="collapse">
-  <li><a href="#principal-components-analysis" id="toc-principal-components-analysis" class="nav-link" data-scroll-target="#principal-components-analysis">Principal Components Analysis</a></li>
-  <li><a href="#k-means-clustering" id="toc-k-means-clustering" class="nav-link" data-scroll-target="#k-means-clustering">K-Means Clustering</a></li>
-  <li><a href="#hierarchical-clustering" id="toc-hierarchical-clustering" class="nav-link" data-scroll-target="#hierarchical-clustering">Hierarchical Clustering</a></li>
-  <li><a href="#model-based-clustering" id="toc-model-based-clustering" class="nav-link" data-scroll-target="#model-based-clustering">Model-Based Clustering</a></li>
-  <li><a href="#scaling-and-categorical-variables" id="toc-scaling-and-categorical-variables" class="nav-link" data-scroll-target="#scaling-and-categorical-variables">Scaling and Categorical Variables</a></li>
+  <li><a href="#a-simple-example" id="toc-a-simple-example" class="nav-link" data-scroll-target="#a-simple-example">A Simple Example</a></li>
+  <li><a href="#interpreting-principal-components" id="toc-interpreting-principal-components" class="nav-link" data-scroll-target="#interpreting-principal-components">Interpreting Principal Components</a></li>
+  <li><a href="#correspondence-analysis" id="toc-correspondence-analysis" class="nav-link" data-scroll-target="#correspondence-analysis">Correspondence Analysis</a></li>
+  </ul></li>
+  <li><a href="#k-means-clustering" id="toc-k-means-clustering" class="nav-link" data-scroll-target="#k-means-clustering">K-Means Clustering</a>
+  <ul class="collapse">
+  <li><a href="#a-simple-example-1" id="toc-a-simple-example-1" class="nav-link" data-scroll-target="#a-simple-example-1">A Simple Example</a></li>
+  <li><a href="#k-means-algorithm" id="toc-k-means-algorithm" class="nav-link" data-scroll-target="#k-means-algorithm">K-Means Algorithm</a></li>
+  <li><a href="#interpreting-the-clusters" id="toc-interpreting-the-clusters" class="nav-link" data-scroll-target="#interpreting-the-clusters">Interpreting the Clusters</a></li>
+  <li><a href="#selecting-the-number-of-clusters" id="toc-selecting-the-number-of-clusters" class="nav-link" data-scroll-target="#selecting-the-number-of-clusters">Selecting the Number of Clusters</a></li>
+  </ul></li>
+  <li><a href="#hierarchical-clustering" id="toc-hierarchical-clustering" class="nav-link" data-scroll-target="#hierarchical-clustering">Hierarchical Clustering</a>
+  <ul class="collapse">
+  <li><a href="#a-simple-example-2" id="toc-a-simple-example-2" class="nav-link" data-scroll-target="#a-simple-example-2">A Simple Example</a></li>
+  <li><a href="#the-dendrogram" id="toc-the-dendrogram" class="nav-link" data-scroll-target="#the-dendrogram">The Dendrogram</a></li>
+  </ul></li>
+  <li><a href="#model-based-clustering" id="toc-model-based-clustering" class="nav-link" data-scroll-target="#model-based-clustering">Model-Based Clustering</a>
+  <ul class="collapse">
+  <li><a href="#mixtures-of-normals" id="toc-mixtures-of-normals" class="nav-link" data-scroll-target="#mixtures-of-normals">Mixtures of Normals</a></li>
+  <li><a href="#selecting-the-number-of-clusters-1" id="toc-selecting-the-number-of-clusters-1" class="nav-link" data-scroll-target="#selecting-the-number-of-clusters-1">Selecting the Number of Clusters</a></li>
+  </ul></li>
+  <li><a href="#scaling-and-categorical-variables" id="toc-scaling-and-categorical-variables" class="nav-link" data-scroll-target="#scaling-and-categorical-variables">Scaling and Categorical Variables</a>
+  <ul class="collapse">
+  <li><a href="#scaling-the-variables" id="toc-scaling-the-variables" class="nav-link" data-scroll-target="#scaling-the-variables">Scaling the Variables</a></li>
+  <li><a href="#dominant-variables" id="toc-dominant-variables" class="nav-link" data-scroll-target="#dominant-variables">Dominant Variables</a></li>
+  <li><a href="#categorical-data-and-gowers-distance" id="toc-categorical-data-and-gowers-distance" class="nav-link" data-scroll-target="#categorical-data-and-gowers-distance">Categorical Data and Gower’s Distance</a></li>
+  <li><a href="#problems-with-clustering-mixed-data" id="toc-problems-with-clustering-mixed-data" class="nav-link" data-scroll-target="#problems-with-clustering-mixed-data">Problems with Clustering Mixed Data</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#supplementary-material" id="toc-supplementary-material" class="nav-link" data-scroll-target="#supplementary-material">Supplementary Material</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#figure-7-4.-graphical-representation-of-a-correspondence-analysis-of-house-task-data" id="toc-figure-7-4.-graphical-representation-of-a-correspondence-analysis-of-house-task-data" class="nav-link" data-scroll-target="#figure-7-4.-graphical-representation-of-a-correspondence-analysis-of-house-task-data">Figure 7-4. Graphical representation of a correspondence analysis of house task data</a></li>
   <li><a href="#figure-7-5.-the-clusters-of-k-means-applied-to-daily-stock-returns-for-exxonmobil-and-chevron" id="toc-figure-7-5.-the-clusters-of-k-means-applied-to-daily-stock-returns-for-exxonmobil-and-chevron" class="nav-link" data-scroll-target="#figure-7-5.-the-clusters-of-k-means-applied-to-daily-stock-returns-for-exxonmobil-and-chevron">Figure 7-5. The clusters of K-means applied to daily stock returns for ExxonMobil and Chevron</a></li>
   <li><a href="#figure-7-9.-a-comparison-of-measures-of-dissimilarity-applied-to-stock-data" id="toc-figure-7-9.-a-comparison-of-measures-of-dissimilarity-applied-to-stock-data" class="nav-link" data-scroll-target="#figure-7-9.-a-comparison-of-measures-of-dissimilarity-applied-to-stock-data">Figure 7-9. A comparison of measures of dissimilarity applied to stock data</a></li>
@@ -265,7 +290,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Location of the data files. Adjust this path if you keep the data</span></span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># files in a different directory.</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="ot">&lt;-</span> <span class="st">'../../data'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="ot">&lt;-</span> <span class="st">'../data'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="unsupervised-learning" class="level2">
 <h2 class="anchored" data-anchor-id="unsupervised-learning">Unsupervised Learning</h2>

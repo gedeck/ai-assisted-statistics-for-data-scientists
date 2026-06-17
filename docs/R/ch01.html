@@ -207,22 +207,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
   <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link active" data-scroll-target="#exploratory-data-analysis">Exploratory Data Analysis</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#data-dictionaries-and-catalogs" id="toc-data-dictionaries-and-catalogs" class="nav-link" data-scroll-target="#data-dictionaries-and-catalogs">Data Dictionaries and Catalogs</a></li>
-  <li><a href="#estimates-of-location" id="toc-estimates-of-location" class="nav-link" data-scroll-target="#estimates-of-location">Estimates of Location</a></li>
-  <li><a href="#estimates-of-variability" id="toc-estimates-of-variability" class="nav-link" data-scroll-target="#estimates-of-variability">Estimates of Variability</a></li>
-  <li><a href="#exploring-the-data-distribution" id="toc-exploring-the-data-distribution" class="nav-link" data-scroll-target="#exploring-the-data-distribution">Exploring the Data Distribution</a></li>
+  <li><a href="#estimates-of-location" id="toc-estimates-of-location" class="nav-link" data-scroll-target="#estimates-of-location">Estimates of Location</a>
+  <ul class="collapse">
+  <li><a href="#example-location-estimates-of-population-and-murder-rates" id="toc-example-location-estimates-of-population-and-murder-rates" class="nav-link" data-scroll-target="#example-location-estimates-of-population-and-murder-rates">Example: Location Estimates of Population and Murder Rates</a></li>
+  </ul></li>
+  <li><a href="#estimates-of-variability" id="toc-estimates-of-variability" class="nav-link" data-scroll-target="#estimates-of-variability">Estimates of Variability</a>
+  <ul class="collapse">
+  <li><a href="#example-variability-estimates-of-state-population" id="toc-example-variability-estimates-of-state-population" class="nav-link" data-scroll-target="#example-variability-estimates-of-state-population">Example: Variability Estimates of State Population</a></li>
+  </ul></li>
+  <li><a href="#exploring-the-data-distribution" id="toc-exploring-the-data-distribution" class="nav-link" data-scroll-target="#exploring-the-data-distribution">Exploring the Data Distribution</a>
+  <ul class="collapse">
+  <li><a href="#percentiles-and-boxplots" id="toc-percentiles-and-boxplots" class="nav-link" data-scroll-target="#percentiles-and-boxplots">Percentiles and Boxplots</a></li>
+  <li><a href="#frequency-tables-and-histograms" id="toc-frequency-tables-and-histograms" class="nav-link" data-scroll-target="#frequency-tables-and-histograms">Frequency Tables and Histograms</a></li>
+  <li><a href="#density-plots-and-estimates" id="toc-density-plots-and-estimates" class="nav-link" data-scroll-target="#density-plots-and-estimates">Density Plots and Estimates</a></li>
+  </ul></li>
   <li><a href="#exploring-binary-and-categorical-data" id="toc-exploring-binary-and-categorical-data" class="nav-link" data-scroll-target="#exploring-binary-and-categorical-data">Exploring Binary and Categorical Data</a></li>
-  <li><a href="#correlation" id="toc-correlation" class="nav-link" data-scroll-target="#correlation">Correlation</a></li>
-  <li><a href="#exploring-two-or-more-variables" id="toc-exploring-two-or-more-variables" class="nav-link" data-scroll-target="#exploring-two-or-more-variables">Exploring Two or More Variables</a></li>
+  <li><a href="#correlation" id="toc-correlation" class="nav-link" data-scroll-target="#correlation">Correlation</a>
+  <ul class="collapse">
+  <li><a href="#scatterplots" id="toc-scatterplots" class="nav-link" data-scroll-target="#scatterplots">Scatterplots</a></li>
+  </ul></li>
+  <li><a href="#exploring-two-or-more-variables" id="toc-exploring-two-or-more-variables" class="nav-link" data-scroll-target="#exploring-two-or-more-variables">Exploring Two or More Variables</a>
+  <ul class="collapse">
+  <li><a href="#hexagonal-binning-and-contours-passspan-classkeep-togetherplotting-numeric-versus-numeric-data" id="toc-hexagonal-binning-and-contours-passspan-classkeep-togetherplotting-numeric-versus-numeric-data" class="nav-link" data-scroll-target="#hexagonal-binning-and-contours-passspan-classkeep-togetherplotting-numeric-versus-numeric-data">Hexagonal Binning and Contours pass:[&lt;span class#“keep-together”&gt;(Plotting Numeric-Versus-Numeric Data)]</a></li>
+  <li><a href="#two-categorical-variables" id="toc-two-categorical-variables" class="nav-link" data-scroll-target="#two-categorical-variables">Two Categorical Variables</a></li>
+  <li><a href="#categorical-and-numeric-data" id="toc-categorical-and-numeric-data" class="nav-link" data-scroll-target="#categorical-and-numeric-data">Categorical and Numeric Data</a></li>
+  <li><a href="#visualizing-multiple-variables" id="toc-visualizing-multiple-variables" class="nav-link" data-scroll-target="#visualizing-multiple-variables">Visualizing Multiple Variables</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#supplementary-material" id="toc-supplementary-material" class="nav-link" data-scroll-target="#supplementary-material">Supplementary Material</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#table-1-2.-a-few-rows-of-the-data.frame-state-of-population-and-murder-rate-by-state" id="toc-table-1-2.-a-few-rows-of-the-data.frame-state-of-population-and-murder-rate-by-state" class="nav-link" data-scroll-target="#table-1-2.-a-few-rows-of-the-data.frame-state-of-population-and-murder-rate-by-state">Table 1-2. A few rows of the data.frame state of population and murder rate by state</a></li>
   <li><a href="#table-1-4.-percentiles-of-murder-rate-by-state" id="toc-table-1-4.-percentiles-of-murder-rate-by-state" class="nav-link" data-scroll-target="#table-1-4.-percentiles-of-murder-rate-by-state">Table 1-4. Percentiles of murder rate by state</a></li>
   <li><a href="#table-1-5.-a-frequency-table-of-population-by-state" id="toc-table-1-5.-a-frequency-table-of-population-by-state" class="nav-link" data-scroll-target="#table-1-5.-a-frequency-table-of-population-by-state">Table 1-5. A frequency table of population by state</a></li>
@@ -267,7 +287,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Location of the data files. Adjust this path if you keep the data</span></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># files in a different directory.</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="ot">&lt;-</span> <span class="st">'../../data'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="ot">&lt;-</span> <span class="st">'../data'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="exploratory-data-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory Data Analysis</h2>
@@ -322,26 +342,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_openai</span>(system_prompt, <span class="at">model =</span> <span class="st">"gpt-4o-mini"</span>)</span>
 <span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>response <span class="ot">&lt;-</span> chat<span class="sc">$</span><span class="fu">chat</span>(message)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Here’s an improved data dictionary for the eBay Auctions dataset in YAML 
-format:
+<pre><code>Here’s an improved version of your data dictionary in YAML format:
 
 ```yaml
-name: eBay Auctions
+name: ebay Auctions
 description: &gt;
-  The dataset eBayAuctions.csv contains information on 1972 auctions that
-  transacted on eBay.com during May-June 2004.
-source: 
-  author: "Galit Shmueli and Peter Bruce"
-  copyright: "Copyright 2016"
+    The dataset eBayAuctions.csv contains information on 1972 auctions that
+    were transacted on eBay.com during May-June 2004.
+source: Copyright 2016 Galit Shmueli and Peter Bruce
 size:
-  observations: 1972
-  features: 8
+    observations: 1972
+    features: 8
 features:
   - feature_name: Category
     readable_variable_name: Auction Category
-    definition: The category of the auctioned item.
+    definition: Category of the auctioned item
     data_type: categorical
-    measurement_units: None
     allowed_values: 
       - Music/Movie/Game
       - Coins/Stamps
@@ -351,37 +367,33 @@ features:
       - Collectibles
 
   - feature_name: currency
-    readable_variable_name: Auction Currency
-    definition: The currency in which the auction prices are denominated.
+    readable_variable_name: Currency Type
+    definition: Currency used for the auction prices
     data_type: categorical
-    measurement_units: None
     allowed_values: 
-      - US (US dollar)
-      - GBP (British pound)
-      - EUR (Euro)
+      - US
+      - GBP
+      - EUR
 
   - feature_name: sellerRating
     readable_variable_name: Seller Rating
-    definition: A rating by eBay based on the number of good and bad 
-transactions the seller had.
+    definition: A rating by eBay based on the number of 'good' and 'bad' 
+transactions the seller had
     data_type: integer
-    measurement_units: rating points
-    allowed_values: None
+    measurement_units: rating scale
 
   - feature_name: Duration
     readable_variable_name: Auction Duration
-    definition: The number of days the auction lasted, set by the seller at 
-auction start.
+    definition: Number of days the auction lasted (set by seller at auction 
+start)
     data_type: integer
     measurement_units: days
-    allowed_values: None
 
   - feature_name: endDay
     readable_variable_name: End Day of Auction
-    definition: The day of the week that the auction closed.
+    definition: Day of the week that the auction closed
     data_type: categorical
-    measurement_units: None
-    allowed_values: 
+    allowed_values:
       - Mon
       - Tue
       - Wed
@@ -392,32 +404,27 @@ auction start.
 
   - feature_name: ClosePrice
     readable_variable_name: Closing Price
-    definition: The price at which the item was sold, converted into USD.
+    definition: Price at which the item sold (converted into USD)
     data_type: float
     measurement_units: USD
-    allowed_values: None
 
   - feature_name: OpenPrice
     readable_variable_name: Opening Price
-    definition: The initial price set by the seller, converted into USD.
+    definition: Initial price set by the seller (converted into USD)
     data_type: float
     measurement_units: USD
-    allowed_values: None
 
   - feature_name: Competitive
-    readable_variable_name: Competitive Auction
-    definition: Indicates whether the auction had a single bid (0) or multiple 
-bids (1).
+    readable_variable_name: Competitive Bidding
+    definition: Indicates whether the auction had a single bid (0) or more (1)
     data_type: categorical
-    measurement_units: None
-    allowed_values: 
-      - 0 (Single Bid)
-      - 1 (Multiple Bids)
+    allowed_values:
+      - 0: Single Bid
+      - 1: Multiple Bids
 ```
 
-This structure enhances readability and organization, ensuring that each 
-feature includes key descriptive information alongside its data type, 
-measurement units, and allowed values as appropriate.</code></pre>
+Feel free to let me know if you need any further modifications or additional 
+information!</code></pre>
 </div>
 </div>
 </section>

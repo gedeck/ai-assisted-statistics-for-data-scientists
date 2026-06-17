@@ -1,0 +1,357 @@
+---
+title: "Chapter 5: Classification"
+format: html
+---
+```{r setup}
+#| include: FALSE
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, autodep = TRUE, fig.align = "center")
+```
+```{r paged.print=FALSE}
+#| cache: FALSE
+#| message: FALSE
+#| warning: FALSE
+library(discrim)
+library(ggpubr)
+library(mgcv)
+library(patchwork)
+library(rpart)
+library(tidymodels)
+library(tidyverse)
+
+set.seed(123)
+
+# Location of the data files. Adjust this path if you keep the data
+# files in a different directory.
+DATA_DIR <- '../data'
+
+```
+## Classification
+### Naive Bayes
+#### The Naive Solution
+```{r paged.print=FALSE}
+loan_data <- read_csv(file.path(DATA_DIR, "loan_data.csv.gz"), show_col_types = FALSE) %>%
+  dplyr::select(-c(index, status)) %>%
+  mutate(
+    across(where(is.character), as.factor),
+    outcome = factor(outcome, levels = c("paid off", "default")),
+  )
+naive_model <- naive_Bayes() %>%
+  fit(outcome ~ purpose_ + home_ + emp_len_, loan_data)
+
+naive_model %>%
+  extract_fit_engine() %>%
+  pluck("tables")
+```
+```{r paged.print=FALSE}
+new_loan <- loan_data[147, c("purpose_", "home_", "emp_len_")]
+row.names(new_loan) <- NULL
+new_loan
+```
+```{r paged.print=FALSE}
+predict(naive_model, new_loan)
+```
+```{r paged.print=FALSE}
+predict(naive_model, new_loan, type = "prob")
+```
+#### Numeric Predictor Variables
+```{r paged.print=FALSE}
+less_naive <- naive_Bayes() %>%
+  set_args(usekernel = FALSE) %>%
+  fit(outcome ~ borrower_score + payment_inc_ratio +
+      purpose_ + home_ + emp_len_, loan_data)
+
+(naive_model %>%
+    extract_fit_engine() %>%
+    pluck("tables"))[1:2]
+```
+```{r paged.print=FALSE}
+p_paid <- sum(loan_data$outcome == "default") / nrow(loan_data)
+p_default <- sum(loan_data$outcome == "paid off") / nrow(loan_data)
+p_bs_paid <- function(x, stats) dnorm(x, mean = stats[1, 1], sd = stats[1, 2])
+p_bs_default <- function(x, stats) dnorm(x, mean = stats[2, 1], sd = stats[2, 2])
+p_paid_bs <- function(x, stats) {
+  return(p_paid * p_bs_paid(x, stats) /
+      (p_paid * p_bs_paid(x, stats) + p_default * p_bs_default(x, stats)))
+}
+p_default_bs <- function(x, stats) {
+  return(p_default * p_bs_default(x, stats) /
+      (p_paid * p_bs_paid(x, stats) + p_default * p_bs_default(x, stats)))
+}
+
+stats <- less_naive %>%
+  extract_fit_engine() %>%
+  pluck("tables", "borrower_score")
+g1 <- ggplot(data.frame(borrower_score = c(0, 1)), aes(x = borrower_score)) +
+  stat_function(fun = p_bs_paid, color = "blue", linetype = 1,
+    args = list(stats = stats)) +
+  stat_function(fun = p_bs_default, color = "red", linetype = 2,
+    args = list(stats = stats)) +
+  labs(y = "P(Xj | Y=i)") + theme_bw()
+g2 <- ggplot(data.frame(borrower_score = c(0, 1)), aes(x = borrower_score)) +
+  stat_function(fun = p_paid_bs, color = "blue", linetype = 1,
+    args = list(stats = stats)) +
+  stat_function(fun = p_default_bs, color = "red", linetype = 2,
+    args = list(stats = stats)) +
+  labs(y = "P(Y=i | Xj)") + theme_bw()
+g <- wrap_plots(g1, g2)
+g
+```
+### Discriminant Analysis
+#### A Simple Example
+```{r paged.print=FALSE}
+loan3000 <- read_csv(file.path(DATA_DIR, "loan3000.csv"), show_col_types = FALSE) %>%
+  mutate(
+    outcome = factor(outcome, levels = c("paid off", "default")),
+    purpose_ = factor(purpose_)
+  )
+
+loan_lda <- discrim_linear() %>%
+  fit(outcome ~ borrower_score + payment_inc_ratio, data = loan3000)
+
+loan_lda %>%
+  extract_fit_engine() %>%
+  pluck("scaling")
+```
+```{r paged.print=FALSE}
+lda_pred <- augment(loan_lda, new_data = loan3000)
+head(lda_pred %>% select(.pred_class, .pred_default, `.pred_paid off`))
+```
+```{r paged.print=FALSE}
+loan_fit_engine <- loan_lda %>% extract_fit_engine()
+center <- 0.5 * (loan_fit_engine$mean[1, ] + loan_fit_engine$mean[2, ])
+slope <- -loan_fit_engine$scaling[1] / loan_fit_engine$scaling[2]
+intercept <- center[2] - center[1] * slope
+
+ggplot(data = lda_pred,
+  aes(x = borrower_score, y = payment_inc_ratio, color = .pred_default)) +
+  geom_point(alpha = 0.6) +
+  scale_color_gradientn(colors = c("#ca0020", "#f7f7f7", "#0571b0")) +
+  coord_cartesian(xlim = c(0, 1), ylim = c(0, 20)) +
+  geom_abline(slope = slope, intercept = intercept, color = "darkgreen")
+```
+### Logistic Regression
+#### Logistic Regression and the GLM
+```{r paged.print=FALSE}
+logistic_model <- logistic_reg(mode = "classification") %>%
+  fit(outcome ~ payment_inc_ratio + purpose_ +
+      home_ + emp_len_ + borrower_score, loan_data)
+logistic_model
+```
+#### Predicted Values from Logistic Regression
+```{r paged.print=FALSE}
+pred <- predict(logistic_model, new_data = loan_data, type = "raw")
+summary(pred)
+```
+```{r paged.print=FALSE}
+prob <- 1 / (1 + exp(-pred))
+summary(prob)
+```
+```{r paged.print=FALSE}
+prob <- predict(logistic_model, new_data = loan_data, type = "prob")
+summary(prob$.pred_default)
+```
+#### Assessing the Model
+```{r paged.print=FALSE}
+logistic_model %>%
+  extract_fit_engine() %>%
+  summary()
+```
+```{r paged.print=FALSE}
+gam_formula <- outcome ~ s(payment_inc_ratio) + purpose_ +
+  home_ + emp_len_ + s(borrower_score)
+logistic_gam <- gen_additive_mod(mode = "classification") %>%
+  fit(gam_formula, data = loan_data)
+```
+##### Analysis of residuals
+```{r paged.print=FALSE}
+terms <- predict(logistic_gam %>% extract_fit_engine(), type = "terms")
+partial_resid <- resid(logistic_gam %>% extract_fit_engine()) + terms
+df <- data.frame(payment_inc_ratio = loan_data[, "payment_inc_ratio"],
+  terms = terms[, "s(payment_inc_ratio)"],
+  partial_resid = partial_resid[, "s(payment_inc_ratio)"])
+ggplot(df, aes(x = payment_inc_ratio, y = partial_resid, solid = FALSE)) +
+  geom_point(shape = 46, alpha = 0.4) +
+  geom_line(aes(x = payment_inc_ratio, y = terms),
+    color = "red", alpha = 0.5, linewidth = 1.5) +
+  labs(y = "Partial Residual") +
+  coord_cartesian(xlim = c(0, 25))
+```
+### Evaluating Classification Models
+####  Confusion Matrix
+```{r paged.print=FALSE}
+predictions <- augment(logistic_gam, loan_data)
+pred_y <- as.numeric(predictions$.pred_class == "default")
+true_y <- as.numeric(predictions$outcome == "default")
+true_pos <- (true_y == 1) & (pred_y == 1)
+true_neg <- (true_y == 0) & (pred_y == 0)
+false_pos <- (true_y == 0) & (pred_y == 1)
+false_neg <- (true_y == 1) & (pred_y == 0)
+conf_mat <- matrix(
+  c(sum(true_neg), sum(false_pos),
+    sum(false_neg), sum(true_pos)), 2, 2)
+rownames(conf_mat) <- c("Yhat = 0", "Yhat = 1")
+colnames(conf_mat) <- c("Y = 0", "Y = 1")
+conf_mat
+```
+```{r paged.print=FALSE}
+conf_mat(predictions, truth = outcome, estimate = .pred_class)
+```
+#### Precision, Recall, and Specificity
+```{r paged.print=FALSE}
+bind_rows(
+  precision(predictions, truth = outcome, estimate = .pred_class),
+  recall(predictions, truth = outcome, estimate = .pred_class),
+  specificity(predictions, truth = outcome, estimate = .pred_class),
+) %>% select(-.estimator)
+```
+#### ROC Curve
+```{r paged.print=FALSE}
+roc_curve(predictions, outcome, .pred_default, event_level = "second") %>%
+  autoplot()
+```
+```{r paged.print=FALSE}
+prob <- predict(logistic_gam, new_data = loan_data, type = "prob")
+idx <- order(-prob$.pred_default)
+recall <- cumsum(true_y[idx] == 1) / sum(true_y == 1)
+specificity <- (sum(true_y == 0) - cumsum(true_y[idx] == 0)) / sum(true_y == 0)
+roc_df <- data.frame(recall = recall, specificity = specificity)
+ggplot(roc_df, aes(x = specificity, y = recall)) +
+  geom_line(color = "blue") +
+  scale_x_reverse(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  geom_line(data = data.frame(x = (0:100) / 100), aes(x = x, y = 1 - x),
+    linetype = "dotted", color = "red")
+```
+#### AUC
+```{r paged.print=FALSE}
+sum(roc_df$recall[-1] * diff(1 - roc_df$specificity))
+```
+### Strategies for Imbalanced Data
+#### Undersampling
+```{r paged.print=FALSE}
+full_train_set <- read_csv(file.path(DATA_DIR, "full_train_set.csv.gz"), show_col_types = FALSE) %>%
+  mutate(
+    across(where(is.character), as.factor),
+    outcome = factor(outcome, levels = c("paid off", "default")),
+  )
+
+mean(full_train_set$outcome == "default")
+```
+```{r paged.print=FALSE}
+full_model <- logistic_reg(mode = "classification") %>%
+  fit(outcome ~ payment_inc_ratio + purpose_ +
+      home_ + emp_len_ + dti + revol_bal + revol_util,
+    full_train_set)
+pred <- predict(full_model, new_data = full_train_set)
+100 * mean(pred == "default")
+```
+#### Oversampling and Up/Down Weighting
+```{r paged.print=FALSE}
+full_train_set <- full_train_set %>%
+  mutate(
+    weight = ifelse(outcome == "default", 1 / mean(outcome == "default"), 1.0),
+    weight = importance_weights(weight))
+weighted_model <- workflow() %>%
+  add_model(logistic_reg(mode = "classification")) %>%
+  add_case_weights(weight) %>%
+  add_formula(outcome ~ payment_inc_ratio + purpose_ +
+      home_ + emp_len_ + dti + revol_bal + revol_util) %>%
+  fit(full_train_set)
+pred <- predict(weighted_model, new_data = full_train_set)
+100 * mean(pred == "default")
+```
+# Supplementary Material
+## Figure 5-2. Graph of the logit function that maps a probability to a scale suitable for a linear model
+```{r paged.print=FALSE}
+p <- seq(from = 0.01, to = 0.99, by = 0.01)
+df <- tibble(
+  p = p,
+  logit = log(p / (1 - p)),
+  odds = p / (1 - p),
+)
+
+graph <- ggplot(data = df, aes(x = p, y = logit)) +
+  geom_line() +
+  labs(x = "p", y = "logit(p)")
+graph
+```
+## How to control the order of the classes in Python
+## Figure 5-3. The relationship between the odds ratio and the log-odds ratio
+```{r paged.print=FALSE}
+graph <- ggplot(data = df, aes(x = logit, y = odds)) +
+  geom_line() +
+  labs(x = "log(odds ratio)", y = "odds ratio") +
+  coord_cartesian(xlim = c(0, 5), ylim = c(1, 100))
+graph
+```
+## Figure 5-4. Partial residuals from logistic regression
+## Figure 5-7. Area under the ROC curve for the loan data
+```{r paged.print=FALSE}
+graph <- ggplot(roc_df, aes(specificity)) +
+  geom_ribbon(aes(ymin = 0, ymax = recall), fill = "blue", alpha = 0.3) +
+  scale_x_reverse(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(y = "recall") +
+  theme(plot.margin = unit(c(5.5, 10, 5.5, 5.5), "points"))
+graph
+```
+## SMOTE
+## Figure 5-8. Comparison of the classification rules for four different methods
+```{r paged.print=FALSE}
+loan_tree <- rpart(outcome ~ borrower_score + payment_inc_ratio,
+  data = loan3000, control = rpart.control(cp = 0.005))
+loan_tree
+
+lda_pred <- tibble(
+  borrower_score = c((0 - intercept) / slope, (20 - intercept) / slope),
+  payment_inc_ratio = c(0, 20),
+  method = "LDA",
+)
+
+tree_pred <- tibble(
+  borrower_score = c(0.375, 0.375, 0.475, 0.475, 0.575, 0.575),
+  payment_inc_ratio = c(0, 4.426,  4.426, 10.42, 10.42, 20),
+  method = "Tree",
+)
+
+glm0 <- glm(outcome ~ payment_inc_ratio +  borrower_score,
+  data = loan3000, family = "binomial")
+y <- seq(from = 0, to = 20, length = 100)
+x <- (- glm0$coefficients[1] - glm0$coefficients[2] * y) / glm0$coefficients[3]
+glm0_pred <- tibble(
+  borrower_score = x,
+  payment_inc_ratio = y,
+  method = "Logistic",
+)
+
+gam1 <- gam(outcome ~ s(payment_inc_ratio) +  s(borrower_score),
+  data = loan3000, family = "binomial")
+gam_fun <- function(x) {
+  newdata <- data.frame(borrower_score = x, payment_inc_ratio = y)
+  rss <- sum(predict(gam1, newdata = newdata)^2)
+  return(rss)
+}
+est_x <- nlminb(seq(from = 0.33, to = 0.73, length = 100), gam_fun)
+gam1_pred <- tibble(
+  borrower_score = est_x$par,
+  payment_inc_ratio = y,
+  method = "GAM",
+)
+
+loan_fits <- bind_rows(
+  lda_pred,
+  tree_pred,
+  glm0_pred,
+  gam1_pred,
+)
+```
+```{r paged.print=FALSE}
+graph <- ggplot(data = loan_fits, aes(x = borrower_score, y = payment_inc_ratio, color = method, linetype = method)) +
+  geom_line(linewidth = 1.2) +
+  theme_bw() +
+  theme(legend.key.width = unit(3, "cm")) +
+  guides(linetype = guide_legend(override.aes = list(size = 1)))
+graph
+```
+# Naive Bayes with numerical features
+# print(f"MixedNB Library Accuracy: {accuracy_mixed:.2f}")

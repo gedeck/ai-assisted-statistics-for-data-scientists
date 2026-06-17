@@ -207,18 +207,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#resampling" id="toc-resampling" class="nav-link active" data-scroll-target="#resampling">Resampling</a></li>
-  <li><a href="#statistical-significance-and-p-values" id="toc-statistical-significance-and-p-values" class="nav-link" data-scroll-target="#statistical-significance-and-p-values">Statistical Significance and p-Values</a></li>
+  <li><a href="#resampling" id="toc-resampling" class="nav-link active" data-scroll-target="#resampling">Resampling</a>
+  <ul>
+  <li><a href="#example-web-stickiness" id="toc-example-web-stickiness" class="nav-link" data-scroll-target="#example-web-stickiness">Example: Web Stickiness</a></li>
+  </ul></li>
+  <li><a href="#statistical-significance-and-p-values" id="toc-statistical-significance-and-p-values" class="nav-link" data-scroll-target="#statistical-significance-and-p-values">Statistical Significance and p-Values</a>
+  <ul>
+  <li><a href="#p-value" id="toc-p-value" class="nav-link" data-scroll-target="#p-value">p-Value</a></li>
+  </ul></li>
   <li><a href="#t-tests" id="toc-t-tests" class="nav-link" data-scroll-target="#t-tests">t-Tests</a></li>
-  <li><a href="#anova" id="toc-anova" class="nav-link" data-scroll-target="#anova">ANOVA</a></li>
-  <li><a href="#chi-square-test" id="toc-chi-square-test" class="nav-link" data-scroll-target="#chi-square-test">Chi-Square Test</a></li>
-  <li><a href="#power-and-sample-size" id="toc-power-and-sample-size" class="nav-link" data-scroll-target="#power-and-sample-size">Power and Sample Size</a></li>
+  <li><a href="#anova" id="toc-anova" class="nav-link" data-scroll-target="#anova">ANOVA</a>
+  <ul>
+  <li><a href="#f-statistic" id="toc-f-statistic" class="nav-link" data-scroll-target="#f-statistic">F-Statistic</a></li>
+  </ul></li>
+  <li><a href="#chi-square-test" id="toc-chi-square-test" class="nav-link" data-scroll-target="#chi-square-test">Chi-Square Test</a>
+  <ul>
+  <li><a href="#chi-square-test-a-resampling-approach" id="toc-chi-square-test-a-resampling-approach" class="nav-link" data-scroll-target="#chi-square-test-a-resampling-approach">Chi-Square Test: A Resampling Approach</a></li>
+  <li><a href="#chi-square-test-statistical-theory" id="toc-chi-square-test-statistical-theory" class="nav-link" data-scroll-target="#chi-square-test-statistical-theory">Chi-Square Test: Statistical Theory</a></li>
+  <li><a href="#fishers-exact-test" id="toc-fishers-exact-test" class="nav-link" data-scroll-target="#fishers-exact-test">Fisher’s Exact Test</a></li>
+  </ul></li>
+  <li><a href="#power-and-sample-size" id="toc-power-and-sample-size" class="nav-link" data-scroll-target="#power-and-sample-size">Power and Sample Size</a>
+  <ul>
+  <li><a href="#sample-size" id="toc-sample-size" class="nav-link" data-scroll-target="#sample-size">Sample Size</a></li>
+  </ul></li>
   <li><a href="#supplementary-material" id="toc-supplementary-material" class="nav-link" data-scroll-target="#supplementary-material">Supplementary Material</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#alternative-to-t-test-using-statsmodels" id="toc-alternative-to-t-test-using-statsmodels" class="nav-link" data-scroll-target="#alternative-to-t-test-using-statsmodels">Alternative to t-test using statsmodels</a></li>
   <li><a href="#figure-3-6.-boxplots-of-the-four-groups-show-considerable-differences-among-them" id="toc-figure-3-6.-boxplots-of-the-four-groups-show-considerable-differences-among-them" class="nav-link" data-scroll-target="#figure-3-6.-boxplots-of-the-four-groups-show-considerable-differences-among-them">Figure 3-6. Boxplots of the four groups show considerable differences among them</a></li>
   <li><a href="#visualizing-the-resampling-results-for-anova" id="toc-visualizing-the-resampling-results-for-anova" class="nav-link" data-scroll-target="#visualizing-the-resampling-results-for-anova">Visualizing the resampling results for ANOVA</a></li>
@@ -260,7 +277,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Location of the data files. Adjust this path if you keep the data</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># files in a different directory.</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="ot">&lt;-</span> <span class="st">'../../data'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="ot">&lt;-</span> <span class="st">'../data'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="resampling" class="level3">
 <h3 class="anchored" data-anchor-id="resampling">Resampling</h3>

@@ -207,14 +207,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
   <li><a href="#neural-networks" id="toc-neural-networks" class="nav-link active" data-scroll-target="#neural-networks">Neural Networks</a>
+  <ul>
+  <li><a href="#fitting-a-network-to-data" id="toc-fitting-a-network-to-data" class="nav-link" data-scroll-target="#fitting-a-network-to-data">Fitting a Network to Data</a>
   <ul class="collapse">
-  <li><a href="#fitting-a-network-to-data" id="toc-fitting-a-network-to-data" class="nav-link" data-scroll-target="#fitting-a-network-to-data">Fitting a Network to Data</a></li>
-  <li><a href="#backpropagation-and-gradient-descent" id="toc-backpropagation-and-gradient-descent" class="nav-link" data-scroll-target="#backpropagation-and-gradient-descent">Backpropagation and Gradient Descent</a></li>
+  <li><a href="#activation-functions-in-the-hidden-layers" id="toc-activation-functions-in-the-hidden-layers" class="nav-link" data-scroll-target="#activation-functions-in-the-hidden-layers">Activation Functions in the Hidden Layers</a></li>
+  <li><a href="#a-simple-model" id="toc-a-simple-model" class="nav-link" data-scroll-target="#a-simple-model">A Simple Model</a></li>
+  </ul></li>
+  <li><a href="#backpropagation-and-gradient-descent" id="toc-backpropagation-and-gradient-descent" class="nav-link" data-scroll-target="#backpropagation-and-gradient-descent">Backpropagation and Gradient Descent</a>
+  <ul class="collapse">
+  <li><a href="#overfitting" id="toc-overfitting" class="nav-link" data-scroll-target="#overfitting">Overfitting</a></li>
+  <li><a href="#regularization" id="toc-regularization" class="nav-link" data-scroll-target="#regularization">Regularization</a></li>
+  <li><a href="#interpretation-and-variable-importance" id="toc-interpretation-and-variable-importance" class="nav-link" data-scroll-target="#interpretation-and-variable-importance">Interpretation and Variable Importance</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#supplementary-material" id="toc-supplementary-material" class="nav-link" data-scroll-target="#supplementary-material">Supplementary Material</a></li>
   </ul>
@@ -254,7 +263,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Location of the data files. Adjust this path if you keep the data</span></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># files in a different directory.</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="ot">&lt;-</span> <span class="st">'../../data'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="ot">&lt;-</span> <span class="st">'../data'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="neural-networks" class="level2">
 <h2 class="anchored" data-anchor-id="neural-networks">Neural Networks</h2>

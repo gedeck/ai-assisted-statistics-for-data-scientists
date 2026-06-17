@@ -207,21 +207,51 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
   <li><a href="#regression-and-prediction" id="toc-regression-and-prediction" class="nav-link active" data-scroll-target="#regression-and-prediction">Regression and Prediction</a>
+  <ul>
+  <li><a href="#simple-linear-regression" id="toc-simple-linear-regression" class="nav-link" data-scroll-target="#simple-linear-regression">Simple Linear Regression</a>
   <ul class="collapse">
-  <li><a href="#simple-linear-regression" id="toc-simple-linear-regression" class="nav-link" data-scroll-target="#simple-linear-regression">Simple Linear Regression</a></li>
-  <li><a href="#multiple-linear-regression" id="toc-multiple-linear-regression" class="nav-link" data-scroll-target="#multiple-linear-regression">Multiple Linear Regression</a></li>
-  <li><a href="#factor-variables-in-regression" id="toc-factor-variables-in-regression" class="nav-link" data-scroll-target="#factor-variables-in-regression">Factor Variables in Regression</a></li>
-  <li><a href="#interpreting-the-regression-equation" id="toc-interpreting-the-regression-equation" class="nav-link" data-scroll-target="#interpreting-the-regression-equation">Interpreting the Regression Equation</a></li>
-  <li><a href="#regression-diagnostics" id="toc-regression-diagnostics" class="nav-link" data-scroll-target="#regression-diagnostics">Regression Diagnostics</a></li>
-  <li><a href="#polynomial-and-spline-regression" id="toc-polynomial-and-spline-regression" class="nav-link" data-scroll-target="#polynomial-and-spline-regression">Polynomial and Spline Regression</a></li>
+  <li><a href="#the-regression-equation" id="toc-the-regression-equation" class="nav-link" data-scroll-target="#the-regression-equation">The Regression Equation</a></li>
+  <li><a href="#fitted-values-and-residuals" id="toc-fitted-values-and-residuals" class="nav-link" data-scroll-target="#fitted-values-and-residuals">Fitted Values and Residuals</a></li>
+  </ul></li>
+  <li><a href="#multiple-linear-regression" id="toc-multiple-linear-regression" class="nav-link" data-scroll-target="#multiple-linear-regression">Multiple Linear Regression</a>
+  <ul class="collapse">
+  <li><a href="#example-king-county-housing-data" id="toc-example-king-county-housing-data" class="nav-link" data-scroll-target="#example-king-county-housing-data">Example: King County Housing Data</a></li>
+  <li><a href="#assessing-the-model" id="toc-assessing-the-model" class="nav-link" data-scroll-target="#assessing-the-model">Assessing the Model</a></li>
+  <li><a href="#model-selection-and-stepwise-regression" id="toc-model-selection-and-stepwise-regression" class="nav-link" data-scroll-target="#model-selection-and-stepwise-regression">Model Selection and Stepwise Regression</a></li>
+  <li><a href="#weighted-regression" id="toc-weighted-regression" class="nav-link" data-scroll-target="#weighted-regression">Weighted Regression</a></li>
+  </ul></li>
+  <li><a href="#factor-variables-in-regression" id="toc-factor-variables-in-regression" class="nav-link" data-scroll-target="#factor-variables-in-regression">Factor Variables in Regression</a>
+  <ul class="collapse">
+  <li><a href="#dummy-variables-representation" id="toc-dummy-variables-representation" class="nav-link" data-scroll-target="#dummy-variables-representation">Dummy Variables Representation</a></li>
+  <li><a href="#factor-variables-with-many-levels" id="toc-factor-variables-with-many-levels" class="nav-link" data-scroll-target="#factor-variables-with-many-levels">Factor Variables with Many Levels</a></li>
+  </ul></li>
+  <li><a href="#interpreting-the-regression-equation" id="toc-interpreting-the-regression-equation" class="nav-link" data-scroll-target="#interpreting-the-regression-equation">Interpreting the Regression Equation</a>
+  <ul class="collapse">
+  <li><a href="#correlated-predictors" id="toc-correlated-predictors" class="nav-link" data-scroll-target="#correlated-predictors">Correlated Predictors</a></li>
+  <li><a href="#confounding-variables" id="toc-confounding-variables" class="nav-link" data-scroll-target="#confounding-variables">Confounding Variables</a></li>
+  <li><a href="#interactions-and-main-effects" id="toc-interactions-and-main-effects" class="nav-link" data-scroll-target="#interactions-and-main-effects">Interactions and Main Effects</a></li>
+  </ul></li>
+  <li><a href="#regression-diagnostics" id="toc-regression-diagnostics" class="nav-link" data-scroll-target="#regression-diagnostics">Regression Diagnostics</a>
+  <ul class="collapse">
+  <li><a href="#outliers" id="toc-outliers" class="nav-link" data-scroll-target="#outliers">Outliers</a></li>
+  <li><a href="#influential-values" id="toc-influential-values" class="nav-link" data-scroll-target="#influential-values">Influential Values</a></li>
+  <li><a href="#heteroskedasticity-nonnormality-and-correlated-errors" id="toc-heteroskedasticity-nonnormality-and-correlated-errors" class="nav-link" data-scroll-target="#heteroskedasticity-nonnormality-and-correlated-errors">Heteroskedasticity, Nonnormality, and Correlated Errors</a></li>
+  <li><a href="#partial-residual-plots-and-nonlinearity" id="toc-partial-residual-plots-and-nonlinearity" class="nav-link" data-scroll-target="#partial-residual-plots-and-nonlinearity">Partial Residual Plots and Nonlinearity</a></li>
+  </ul></li>
+  <li><a href="#polynomial-and-spline-regression" id="toc-polynomial-and-spline-regression" class="nav-link" data-scroll-target="#polynomial-and-spline-regression">Polynomial and Spline Regression</a>
+  <ul class="collapse">
+  <li><a href="#polynomial" id="toc-polynomial" class="nav-link" data-scroll-target="#polynomial">Polynomial</a></li>
+  <li><a href="#splines" id="toc-splines" class="nav-link" data-scroll-target="#splines">Splines</a></li>
+  <li><a href="#generalized-additive-models" id="toc-generalized-additive-models" class="nav-link" data-scroll-target="#generalized-additive-models">Generalized Additive Models</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#supplementary-material" id="toc-supplementary-material" class="nav-link" data-scroll-target="#supplementary-material">Supplementary Material</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#figure-4-1.-cotton-exposure-versus-lung-capacity" id="toc-figure-4-1.-cotton-exposure-versus-lung-capacity" class="nav-link" data-scroll-target="#figure-4-1.-cotton-exposure-versus-lung-capacity">Figure 4-1. Cotton exposure versus lung capacity</a></li>
   <li><a href="#figure-4-2.-slope-and-intercept-for-the-regression-fit-to-the-lung-data" id="toc-figure-4-2.-slope-and-intercept-for-the-regression-fit-to-the-lung-data" class="nav-link" data-scroll-target="#figure-4-2.-slope-and-intercept-for-the-regression-fit-to-the-lung-data">Figure 4-2. Slope and intercept for the regression fit to the lung data</a></li>
   <li><a href="#figure-4-3.-residuals-for-the-regression-fit-to-the-lung-data" id="toc-figure-4-3.-residuals-for-the-regression-fit-to-the-lung-data" class="nav-link" data-scroll-target="#figure-4-3.-residuals-for-the-regression-fit-to-the-lung-data">Figure 4-3. Residuals for the regression fit to the lung data</a></li>
@@ -276,7 +306,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Location of the data files. Adjust this path if you keep the data</span></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># files in a different directory.</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="ot">&lt;-</span> <span class="st">'../../data'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="ot">&lt;-</span> <span class="st">'../data'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="regression-and-prediction" class="level2">
 <h2 class="anchored" data-anchor-id="regression-and-prediction">Regression and Prediction</h2>

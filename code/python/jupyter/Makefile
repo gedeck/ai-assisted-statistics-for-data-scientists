@@ -1,2 +1,0 @@
-publish:
-	quarto render

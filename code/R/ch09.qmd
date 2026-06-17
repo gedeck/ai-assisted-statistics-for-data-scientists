@@ -1,0 +1,19 @@
+---
+title: "Chapter 9: Deep Learning"
+format: html
+---
+
+```{r paged.print=FALSE}
+set.seed(123)
+
+# Location of the data files. Adjust this path if you keep the data
+# files in a different directory.
+DATA_DIR <- '../data'
+
+```
+## Deep Learning
+### CNNs
+#### Putting It All Together: An Example
+### Transformers
+#### Revisiting the MNIST Image Classification Example
+# Supplementary Material
