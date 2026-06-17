@@ -1,5 +1,8 @@
 project:
   type: book
+  output-dir: ../../../docs/R
+  render: 
+    - "*.qmd"
 
 book:
   title: "AI-Assisted Statistics for Data Scientists"

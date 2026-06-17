@@ -132,10 +132,9 @@ dmypy.json
 .Rproj.user
 .Rhistory
 .Renviron
-**/*_files/
-**/*_cache/
-**/_book/
+code/**/*_files/
+code/**/*_cache/
+code/**/_book/
 *.rmarkdown
 code/**/site_libs/
 code/**/ch*.html
-docs/**/site_libs/
