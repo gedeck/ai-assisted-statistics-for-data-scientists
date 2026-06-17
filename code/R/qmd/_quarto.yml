@@ -1,7 +1,7 @@
 project:
   type: book
   output-dir: ../../../docs/R
-  render: 
+  render:
     - "*.qmd"
 
 book:
@@ -26,6 +26,8 @@ format:
       - cosmo
       - custom.scss
     toc: true
+    toc-depth: 4
+    toc-expand: true
     number-sections: false
     include-after-body:
       text: |

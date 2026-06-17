@@ -1,0 +1,101 @@
+/*-- scss:defaults --*/
+$link-color: #2761e3;
+$link-hover-color: darken($link-color, 20%);
+
+/*-- scss:rules --*/
+.header-section-number,.blockquote {
+  color: black;
+}
+
+.margin-caption {
+  color: black;
+}
+
+pre {
+  background-color: #ffffee;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-family: 'Fira Code', monospace;
+  padding: 0.5em;
+}
+
+.sourceCode {
+  background-color: #ffffee;
+  font-size: 0.9em;
+  font-family: 'Fira Code', monospace;
+  overflow-x: auto;
+}
+
+.cell-output>pre {
+  background-color: #eeffff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0.5em;
+  margin-bottom: 1em;
+  font-size: 0.8em;
+  font-family: 'Fira Code', monospace;
+}
+
+.cell-output>pre>code {
+  font-size: 0.8em;
+  font-family: 'Fira Code', monospace;
+}
+
+.sourceCode,.cell-code {
+  padding: 0;
+}
+pre.sourceCode {
+  padding: 0;
+}
+
+pre>code.sourceCode {
+  padding: 0.25em;
+}
+
+pre.output {
+  font-size: 0.7em;
+  background-color: #ffeeff;
+}
+
+.codesummary {
+    background-color: white;
+}
+
+figcaption {
+    color: black;
+}
+
+table > caption {
+    color: black;
+}
+
+.sidebar-item-text.sidebar-link.text-start {
+    font-weight: bold;
+}
+
+code.sourceCode .code-annotation-anchor {
+  height: 16px;
+  width: 16px;
+}
+
+code.sourceCode a.code-annotation-anchor {
+  line-height: 15px;
+}
+
+.cluster rect {
+  fill: #eeffff !important;
+  stroke: grey !important;
+}
+
+.nodeLabel {
+  color: black !important;
+}
+
+a.footnote-back {
+  color: black !important;
+}
+
+a {
+  color: #2761e3 !important;
+}

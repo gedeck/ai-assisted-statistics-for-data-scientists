@@ -1,7 +1,7 @@
 [![](https://img.shields.io/badge/python-3.10--3.14-blue.svg)](https://www.python.org/downloads/)
 
-# AI-Assisted Statistics for Data Scientists
-Code repository for O'Reilly book
+<!-- # AI-Assisted Statistics for Data Scientists
+Code repository for O'Reilly book -->
 
 
 
@@ -25,6 +25,10 @@ by Peter Bruce, Andrew Bruce, and <a href="https://www.amazon.com/Peter-Gedeck/e
     </td>
   </tr>
 </table>
+
+# Documentation
+- [R code](docs/R/)
+- [Python code](docs/python/)
 
 
 <!-- 
