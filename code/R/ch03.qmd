@@ -1,0 +1,166 @@
+---
+title: "Chapter 3: Statistical Experiments and Significance Testing"
+format: html
+---
+```{r setup}
+#| include: FALSE
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, autodep = TRUE, fig.align = "center")
+```
+
+```{r paged.print=FALSE}
+#| cache: FALSE
+#| message: FALSE
+#| warning: FALSE
+library(lmPerm)
+library(pwr)
+library(tidyverse)
+
+set.seed(123)
+
+# Location of the data files. Adjust this path if you keep the data
+# files in a different directory.
+DATA_DIR <- '../data'
+
+```
+### Resampling
+#### Example: Web Stickiness
+```{r paged.print=FALSE}
+session_times <- read_csv(file.path(DATA_DIR, "web_page_data.csv"), show_col_types = FALSE) %>%
+  mutate(Time = Time * 100)
+
+ggplot(session_times, aes(x = Page, y = Time)) +
+  geom_boxplot() +
+  labs(y = "Time (in seconds)")
+```
+```{r paged.print=FALSE}
+mean_a <- session_times %>% filter(Page == "Page A") %>% pull("Time") %>% mean()
+mean_b <- session_times %>% filter(Page == "Page B") %>% pull("Time") %>% mean()
+mean_b - mean_a
+```
+```{r paged.print=FALSE}
+perm_fun <- function(x, n_a) {
+  n <- length(x)
+  x_resampled <- sample(x)
+  x_a <- x_resampled[1:n_a]
+  x_b <- x_resampled[(n_a + 1):n]
+  return(mean(x_b) - mean(x_a))
+}
+```
+```{r paged.print=FALSE}
+set.seed(1)
+perm_diffs <- rep(0, 1000)
+for (i in 1:1000) {
+  perm_diffs[i] <- perm_fun(session_times %>% pull(Time), 21)
+}
+ggplot(tibble(perm_diffs = perm_diffs), aes(x = perm_diffs)) +
+  geom_histogram(bins = 12, color = "black", fill = "white") +
+  geom_vline(xintercept = mean_b - mean_a, linetype = "dashed") +
+  labs(x = "Session time differences (in seconds)", y = "Frequency")
+```
+```{r paged.print=FALSE}
+mean(perm_diffs > (mean_b - mean_a))
+```
+### Statistical Significance and p-Values
+```{r paged.print=FALSE}
+obs_pct_diff <- 100 * (200 / 23739 - 182 / 22588)
+conversion <- c(rep(0, 45945), rep(1, 382))
+perm_diffs <- rep(0, 1000)
+for (i in 1:1000) {
+  perm_diffs[i] <- 100 * perm_fun(conversion, 23739)
+}
+ggplot(tibble(perm_diffs = perm_diffs), aes(x = perm_diffs)) +
+  geom_histogram(bins = 12, color = "black", fill = "white") +
+  geom_vline(xintercept = obs_pct_diff, linetype = "dashed") +
+  labs(x = "Conversion rate (percent)", y = "Frequency") +
+  annotate("text", x = 0.1, y = 215, label = "Observed\ndifference", size = 3)
+```
+#### p-Value
+```{r paged.print=FALSE}
+mean(perm_diffs > obs_pct_diff)
+```
+```{r paged.print=FALSE}
+prop.test(x = c(200, 182), n = c(23739, 22588), alternative = "greater")
+```
+### t-Tests
+```{r paged.print=FALSE}
+t.test(Time ~ Page, data = session_times, alternative = "less")
+```
+### ANOVA
+```{r paged.print=FALSE}
+four_sessions  <- read_csv(file.path(DATA_DIR, "four_sessions.csv"), show_col_types = FALSE)
+summary(aovp(Time ~ Page, data = four_sessions))
+```
+#### F-Statistic
+```{r paged.print=FALSE}
+summary(aov(Time ~ Page, data = four_sessions))
+```
+### Chi-Square Test
+#### Chi-Square Test: A Resampling Approach
+```{r paged.print=FALSE}
+click_rate <-  read_csv(file.path(DATA_DIR, "click_rates.csv"), show_col_types = FALSE)
+clicks <- click_rate %>%
+  pivot_wider(id_cols = Headline, names_from = Click, values_from = Rate) %>%
+  select(Click, `No-click`)
+chisq.test(clicks, simulate.p.value = TRUE)
+```
+#### Chi-Square Test: Statistical Theory
+```{r paged.print=FALSE}
+chisq.test(clicks, simulate.p.value = FALSE)
+```
+#### Fisher's Exact Test
+```{r paged.print=FALSE}
+fisher.test(clicks)
+```
+### Power and Sample Size
+#### Sample Size
+```{r paged.print=FALSE}
+effect_size <- ES.h(p1 = 0.0121, p2 = 0.011)
+pwr.2p.test(h = effect_size, sig.level = 0.05, power = 0.8,
+  alternative = "greater")
+```
+```{r paged.print=FALSE}
+effect_size <- ES.h(p1 = 0.0165, p2 = 0.011)
+pwr.2p.test(h = effect_size, sig.level = 0.05, power = 0.8,
+  alternative = "greater")
+```
+# Supplementary Material
+## Alternative to t-test using statsmodels
+## Figure 3-6. Boxplots of the four groups show considerable differences among them
+```{r paged.print=FALSE}
+graph <- ggplot(four_sessions, aes(x = Page, y = Time)) +
+  geom_boxplot() +
+  labs(y = "Time (in seconds)") +
+  theme_bw()
+graph
+```
+## Visualizing the resampling results for ANOVA
+## chi-2 test using sampling with replacement
+## Figure 3-7. Chi-square distribution with various degrees of freedom
+```{r paged.print=FALSE}
+chi <- tibble(x = 1 + (0:99) * (30 - 1) / 99) %>%
+  mutate(
+    chi_1 = dchisq(x, df = 1),
+    chi_2 = dchisq(x, df = 2),
+    chi_5 = dchisq(x, df = 5),
+    chi_10 = dchisq(x, df = 10),
+    chi_20 = dchisq(x, df = 20),
+  )
+ggplot(chi, aes(x = x)) +
+  geom_line(aes(y = chi_1), linetype = 1) +
+  geom_line(aes(y = chi_2), linetype = 2) +
+  geom_line(aes(y = chi_5), linetype = 4) +
+  geom_line(aes(y = chi_20), linetype = 3) +
+  labs(x = "Value of chi-square statistic", y = "Probability") +
+  annotate("text", 1.5, 0.05, label = "df=1") +
+  annotate("text", 3, 0.25, label = "df=2") +
+  annotate("text", 6, 0.15, label = "df=5") +
+  # annotate("text", 10, 0.1, label = "df=10") +
+  annotate("text", 26, 0.05, label = "df=20")
+```
+## Figure 3-8. Frequency histogram for Imanishi-Kari lab data
+```{r paged.print=FALSE}
+imanishi <- read_csv(file.path(DATA_DIR, "imanishi_data.csv"), show_col_types = FALSE)
+ggplot(imanishi, aes(x = Digit, y = Frequency)) +
+  geom_col() +
+  scale_x_continuous(breaks = 0:9, labels = 0:9)
+```

@@ -1,0 +1,428 @@
+---
+title: "Chapter 7: Unsupervised Learning"
+format: html
+---
+```{r setup}
+#| include: FALSE
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, autodep = TRUE, fig.align = "center")
+```
+```{r paged.print=FALSE}
+#| cache: FALSE
+#| message: FALSE
+#| warning: FALSE
+library(ca)
+library(cluster)
+library(ellipse)
+library(ggrepel)
+library(mclust)
+library(tidyclust)
+library(tidymodels)
+library(tidyverse)
+
+set.seed(123)
+
+# Location of the data files. Adjust this path if you keep the data
+# files in a different directory.
+DATA_DIR <- '../data'
+
+```
+## Unsupervised Learning
+### Principal Components Analysis
+#### A Simple Example
+```{r paged.print=FALSE}
+sp500_px <- read_csv(file.path(DATA_DIR, "sp500_data.csv.gz"), show_col_types = FALSE)
+
+oil_px <- sp500_px[, c("CVX", "XOM")]
+pca <- princomp(oil_px)
+pca$loadings
+```
+```{r paged.print=FALSE}
+pca_rec <- recipe(data = sp500_px, formula = ~ CVX + XOM) %>%
+  step_pca(all_numeric_predictors())
+pca_prep <- pca_rec %>%
+  prep()
+pca_prep$steps[[1]]$rotation
+```
+```{r paged.print=FALSE}
+loadings <- pca$loadings
+ggplot(data = oil_px, aes(x = CVX, y = XOM)) +
+  geom_point(alpha = 0.3) +
+  stat_ellipse(type = "norm", level = 0.99) +
+  geom_abline(intercept = 0, slope = loadings[2, 1] / loadings[1, 1]) +
+  geom_abline(intercept = 0, slope = loadings[2, 2] / loadings[1, 2]) +
+  coord_cartesian(xlim = c(-3, 3), ylim = c(-3, 3))
+```
+#### Interpreting Principal Components
+```{r paged.print=FALSE}
+syms <- c("AAPL", "MSFT", "CSCO", "INTC", "CVX", "XOM", "SLB",
+  "COP", "JPM", "WFC", "USB", "AXP", "WMT", "TGT", "HD", "COST")
+top_sp <- sp500_px %>%
+  filter(Date >= "2011-01-01") %>%
+  select(all_of(syms))
+sp_pca <- princomp(top_sp)
+screeplot(sp_pca)
+```
+```{r paged.print=FALSE}
+components <- 1:length(sp_pca$sdev)
+g <- tibble(
+  Components = components,
+  Variances = sp_pca$sdev ** 2,
+) |>
+filter(
+  Components < 11,
+) |>
+  ggplot(aes(x=Components, y=Variances)) +
+    geom_bar(stat="identity") +
+    coord_cartesian(xlim = c(0.5, 10.49)) +
+    scale_x_continuous(breaks = components) +
+    theme_bw()
+g
+```
+```{r paged.print=FALSE}
+loadings <- sp_pca$loadings[, 1:5]
+loadings <- as_tibble(loadings) %>%
+  mutate(Symbol = row.names(loadings)) %>%
+  pivot_longer(cols = starts_with("Comp"), names_to = "Component",
+    values_to = "Weight") %>%
+  mutate(color = Weight > 0)
+ggplot(loadings, aes(x = Symbol, y = Weight, fill = color)) +
+  geom_bar(stat = "identity") +
+  facet_grid(Component ~ ., scales = "free_y") +
+  guides(fill = "none") +
+  labs(y = "Component Loading") +
+  theme_bw() +
+  theme(axis.title.x = element_blank(),
+    axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+#### Correspondence Analysis
+```{r paged.print=FALSE}
+housetasks <- read_csv(file.path(DATA_DIR, "housetasks.csv"), show_col_types = FALSE) %>%
+  column_to_rownames(var = "Task")
+ca_analysis <- ca(housetasks)
+plot(ca_analysis)
+```
+### K-Means Clustering
+#### A Simple Example
+```{r paged.print=FALSE}
+df <- sp500_px %>%
+  filter(Date >= "2011-01-01")
+kmeans_wf <- workflow() %>%
+  add_recipe(recipe(~ XOM + CVX, data = df)) %>%
+  add_model(k_means(num_clusters = 4))
+model <- kmeans_wf %>% fit(df)
+```
+```{r paged.print=FALSE}
+augment(model, df) %>%
+  select(Date, XOM, CVX, .pred_cluster) %>%
+  head()
+```
+```{r paged.print=FALSE}
+tidy(model)
+```
+```{r paged.print=FALSE}
+ggplot(augment(model, df), aes(x = XOM, y = CVX)) +
+  geom_point(aes(color = .pred_cluster, shape = .pred_cluster), alpha = 0.3) +
+  geom_point(data = tidy(model), aes(x = XOM, y = CVX), size = 3, stroke = 2)
+```
+#### K-Means Algorithm
+```{r paged.print=FALSE}
+syms <- c("AAPL", "MSFT", "CSCO", "INTC", "CVX", "XOM", "SLB", "COP",
+  "JPM", "WFC", "USB", "AXP", "WMT", "TGT", "HD", "COST")
+df <- sp500_px %>%
+  filter(Date >= "2011-01-01") %>%
+  select(all_of(syms))
+set.seed(10010)
+kmeans_wf <- workflow() %>%
+  add_recipe(recipe(~ ., data = df)) %>%
+  add_model(k_means(num_clusters = 5) %>%
+      set_engine("stats", nstart = 10))
+km <- kmeans_wf %>% fit(df)
+```
+#### Interpreting the Clusters
+```{r paged.print=FALSE}
+tidy(km)$size
+```
+```{r paged.print=FALSE}
+centers <- tidy(km) %>%
+  pivot_longer(cols = all_of(syms), names_to = "Symbol",
+    values_to = "Mean") %>%
+  mutate(Color = Mean > 0)
+ggplot(centers, aes(x = Symbol, y = Mean, fill = Color)) +
+  geom_bar(stat = "identity", position = "identity", width = 0.75) +
+  facet_grid(cluster ~ ., scales = "free_y") +
+  guides(fill = "none") +
+  labs(y = "Component Loading") +
+  theme_bw() +
+  theme(axis.title.x = element_blank(),
+    axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+#### Selecting the Number of Clusters
+```{r paged.print=FALSE}
+set.seed(10010)
+train_kmeans <- function(num_clusters, data) {
+  model <- workflow() %>%
+    add_recipe(recipe(~ ., data = data)) %>%
+    add_model(k_means(num_clusters = num_clusters) %>%
+        set_engine("stats", nstart = 50, iter.max = 100)) %>%
+    fit(data)
+  return(model)
+}
+km <- train_kmeans(14, df)
+totalss <- extract_fit_engine(km)$totss
+
+pct_var <- tibble(pct_var = 0, num_clusters = 2:14)
+for (num_clusters in 2:14) {
+  km_cluster <- train_kmeans(num_clusters, df)
+  pct_var[num_clusters - 1, "pct_var"] <- (
+    extract_fit_engine(km_cluster)$betweenss / totalss)
+}
+ggplot(pct_var, aes(x = num_clusters, y = pct_var)) +
+  geom_line() +
+  geom_point() +
+  labs(x = "Number of clusters (k)", y = "% Variance Explained")
+```
+### Hierarchical Clustering
+#### A Simple Example
+```{r paged.print=FALSE}
+syms1 <- c("GOOGL", "AMZN", "AAPL", "MSFT", "CSCO", "INTC", "CVX", "XOM", "SLB",
+  "COP", "JPM", "WFC", "USB", "AXP", "WMT", "TGT", "HD", "COST")
+df <- sp500_px %>%
+  filter(Date >= "2011-01-01") %>%
+  select(all_of(syms1)) %>%
+  t() # take transpose: to cluster companies, we need the stocks along the rows
+
+d <- dist(df)
+hcl <- hclust(d)
+```
+#### The Dendrogram
+```{r paged.print=FALSE}
+plot(hcl)
+```
+```{r paged.print=FALSE}
+plot(hcl, ylab = "distance", xlab = "", sub = "", main = "")
+```
+```{r paged.print=FALSE}
+cutree(hcl, k = 4)
+```
+### Model-Based Clustering
+#### Mixtures of Normals
+```{r paged.print=FALSE}
+df <- sp500_px %>%
+  filter(Date >= "2011-01-01") %>%
+  select(c(XOM, CVX))
+mcl <- Mclust(df)
+summary(mcl)
+```
+```{r paged.print=FALSE}
+cluster <- factor(predict(mcl)$classification)
+ggplot(df, aes(x = XOM, y = CVX, color = cluster, shape = cluster)) +
+  geom_point(alpha = 0.8) +
+  scale_shape_manual(
+    values = c(1, 3),
+    guide = guide_legend(override.aes = aes(size = 2)))
+```
+```{r paged.print=FALSE}
+summary(mcl, parameters = TRUE)$mean
+```
+```{r paged.print=FALSE}
+summary(mcl, parameters = TRUE)$variance
+```
+#### Selecting the Number of Clusters
+```{r paged.print=FALSE}
+plot(mcl, what = "BIC", ask = FALSE)
+```
+```{r paged.print=FALSE}
+plot(mcl, what = "BIC", ask = FALSE)
+```
+### Scaling and Categorical Variables
+#### Scaling the Variables
+```{r paged.print=FALSE}
+loan_data <- read_csv(file.path(DATA_DIR, "loan_data.csv.gz"), show_col_types = FALSE) %>%
+  mutate(
+    across(where(is.character), as.factor),
+    outcome = factor(outcome, levels = c("paid off", "default"))
+  )
+defaults <- loan_data %>%
+  filter(outcome == "default") %>%
+  select(c(loan_amnt, annual_inc, revol_bal, open_acc, dti, revol_util))
+km <- kmeans(defaults, centers = 4, nstart = 10)
+centers <- data.frame(size = km$size, km$centers)
+round(centers, digits = 2)
+```
+```{r paged.print=FALSE}
+df0 <- scale(df)
+km0 <- kmeans(df0, centers = 4, nstart = 10)
+centers0 <- scale(km0$centers, center = FALSE,
+  scale = 1 / attr(df0, "scaled:scale"))
+centers0 <- scale(centers0, center = -attr(df0, "scaled:center"),
+  scale = FALSE)
+centers0 <- data.frame(size = km0$size, centers0)
+round(centers0, digits = 2)
+```
+#### Dominant Variables
+```{r paged.print=FALSE}
+syms <- c("GOOGL", "AMZN", "AAPL", "MSFT", "CSCO", "INTC", "CVX", "XOM", "SLB",
+  "COP", "JPM", "WFC", "USB", "AXP", "WMT", "TGT", "HD", "COST")
+top_sp1 <- sp500_px %>%
+  filter(Date >= "2011-01-01") %>%
+  select(all_of(syms))
+sp_pca1 <- princomp(top_sp1)
+screeplot(sp_pca1)
+```
+```{r paged.print=FALSE}
+components <- 1:length(sp_pca1$sdev)
+g <- tibble(
+  Components = components,
+  Variances = sp_pca1$sdev ** 2,
+) |>
+filter(
+  Components < 11,
+) |>
+  ggplot(aes(x=Components, y=Variances)) +
+    geom_bar(stat="identity") +
+    coord_cartesian(xlim = c(0.5, 10.49)) +
+    scale_x_continuous(breaks = components) +
+    theme_bw()
+g
+```
+```{r paged.print=FALSE}
+round(sp_pca1$loadings[, 1:2], 3)
+```
+#### Categorical Data and Gower's Distance
+```{r paged.print=FALSE}
+x <- loan_data[1:5, c("dti", "payment_inc_ratio", "home_", "purpose_")]
+x
+```
+```{r paged.print=FALSE}
+daisy(x, metric = "gower")
+```
+```{r paged.print=FALSE}
+set.seed(1234)
+defaults <- loan_data %>%
+  filter(outcome == "default")
+df <- defaults[sample(nrow(defaults), 250),
+  c("dti", "payment_inc_ratio", "home_", "purpose_")]
+d <- daisy(df, metric = "gower")
+hcl <- hclust(d)
+dnd <- as.dendrogram(hcl)
+plot(dnd, leaflab = "none", ylab = "distance")
+```
+```{r paged.print=FALSE}
+plot(dnd, leaflab = "none", ylab = "distance")
+```
+```{r paged.print=FALSE}
+dnd_cut <- cut(dnd, h = 0.5)
+df[labels(dnd_cut$lower[[1]]), ]
+```
+#### Problems with Clustering Mixed Data
+```{r paged.print=FALSE}
+df <- model.matrix(~ -1 + dti + payment_inc_ratio + home_ + pub_rec_zero,
+  data = defaults)
+df0 <- scale(df)
+km0 <- kmeans(df0, centers = 4, nstart = 10)
+centers0 <- scale(km0$centers, center = FALSE,
+  scale = 1 / attr(df0, "scaled:scale"))
+round(scale(centers0, center = - attr(df0, "scaled:center"), scale = FALSE), 2)
+```
+# Supplementary Material
+## Figure 7-4. Graphical representation of a correspondence analysis of house task data
+```{r paged.print=FALSE}
+set.seed(1234)
+contrib <- ca_analysis$sv ** 2
+contrib <- contrib / sum(contrib)
+colcoord <- as.data.frame(ca_analysis$colcoord)
+rowcoord <- as.data.frame(ca_analysis$rowcoord)
+coords <- bind_rows(
+  rowcoord %>% mutate(type = "rowcoord"),
+  colcoord %>% mutate(type = "columns")
+)
+row.names(coords) <- gsub("_", " ", row.names(coords))
+
+graph <- ggplot(coords, aes(x = Dim1, y = Dim2, color = type,
+    label = rownames(coords), shape = type)) +
+  geom_hline(yintercept = 0, linetype = "dotted", color = "#444444") +
+  geom_vline(xintercept = 0, linetype = "dotted", color = "#444444") +
+  geom_point() +
+  geom_text_repel() +
+  xlab(sprintf("Dimension 1 (%.1f%%)", 100 * contrib[1])) +
+  ylab(sprintf("Dimension 2 (%.1f%%)", 100 * contrib[2])) +
+  scale_color_manual(values = c("blue", "red")) +
+  theme_bw() +
+  theme(legend.position = "none")
+graph
+```
+## Figure 7-5. The clusters of K-means applied to daily stock returns for ExxonMobil and Chevron
+```{r paged.print=FALSE}
+set.seed(1010103)
+df <- sp500_px %>%
+  filter(Date >= "2011-01-01") %>%
+  select(XOM, CVX)
+km <- kmeans(df, centers = 4, nstart = 1)
+df <- df %>% mutate(cluster = factor(km$cluster))
+centers <- as.tibble(km$centers) %>%
+  mutate(cluster = factor(1:4))
+
+ggplot(df, aes(x = XOM, y = CVX, color = cluster, shape = cluster)) +
+  geom_point() +
+  scale_shape_manual(
+    values = c(1, 3, 2, 4),
+    guide = guide_legend(override.aes = aes(size = 1))
+  ) +
+  geom_point(data = centers, aes(x = XOM, y = CVX), size = 2, stroke = 2, color = "black") +
+  coord_cartesian(xlim = c(-2, 2), ylim = c(-2.5, 2.5)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0))
+```
+## Figure 7-9. A comparison of measures of dissimilarity applied to stock data
+```{r paged.print=FALSE}
+cluster_fun <- function(df, method) {
+  d <- dist(df)
+  hcl <- hclust(d, method = method)
+  tree <- cutree(hcl, k = 4)
+  return(df %>% mutate(cluster = factor(tree), method = method))
+}
+
+df0 <- sp500_px %>%
+  filter(Date >= "2011-01-01") %>%
+  select(XOM, CVX)
+df <- bind_rows(
+  cluster_fun(df0, method = "single"),
+  cluster_fun(df0, method = "average"),
+  cluster_fun(df0, method = "complete"),
+  cluster_fun(df0, method = "ward.D")
+)
+df$method <- ordered(df$method, c("single", "average", "complete", "ward.D"))
+
+graph <- ggplot(data = df, aes(x = XOM, y = CVX, color = cluster, shape = cluster)) +
+  geom_point(alpha = 0.6) +
+  scale_shape_manual(
+    values = c(1, 3, 4, 2),
+    guide = guide_legend(override.aes = aes(size = 2))
+  ) +
+  facet_wrap(~ method)
+graph
+```
+## Figure 7-10. Probability contours for a two-dimensional normal distribution
+```{r paged.print=FALSE}
+mu <- c(0.5, -0.5)
+sigma <- matrix(c(1, 1, 1, 2), nrow = 2)
+prob <- c(0.5, 0.75, 0.95, 0.99) ## or whatever you want
+names(prob) <- prob ## to get id column in result
+df <- tibble()
+for (p in prob){
+  df <- bind_rows(
+    df,
+    as.tibble(ellipse(x = sigma, centre = mu, level = p)) %>%
+      mutate(prob = p)
+  )
+}
+names(df) <- c("X", "Y", "Prob")
+
+## Figure 7-9: Multivariate normal ellipses
+dfmu <- tibble(X = mu[1], Y = mu[2])
+
+graph <- ggplot(df, aes(X, Y)) +
+  geom_path(aes(linetype = factor(Prob))) +
+  geom_point(data = dfmu, aes(X, Y), size = 3)
+graph
+```

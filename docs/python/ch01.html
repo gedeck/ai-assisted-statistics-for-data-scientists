@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Chapter 1: Exploratory Data Analysis – AI-Assisted Statistics for Data Scientists</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ch02.html" rel="next">
+<link href="./index.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-11b2f1958d3bba293f0c38dec6990869.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ch01.html"><span class="chapter-title">Chapter 1: Exploratory Data Analysis</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">AI-Assisted Statistics for Data Scientists</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch01.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Chapter 1: Exploratory Data Analysis</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch02.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Chapter 2: Data and Sampling Distributions</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch03.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Chapter 3: Statistical Experiments and Significance Testing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch04.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Chapter 4: Regression and Prediction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch05.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Chapter 5: Classification</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch06.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Chapter 6: Statistical Machine Learning</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch07.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Chapter 7: Unsupervised Learning</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch08.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Chapter 8: Neural Networks</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch09.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Chapter 9: Deep Learning</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch10.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Chapter 10: Generative AI and Large Language Models (LLMs)</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link active" data-scroll-target="#exploratory-data-analysis">Exploratory Data Analysis</a>
+  <ul>
+  <li><a href="#data-dictionaries-and-catalogs" id="toc-data-dictionaries-and-catalogs" class="nav-link" data-scroll-target="#data-dictionaries-and-catalogs">Data Dictionaries and Catalogs</a></li>
+  <li><a href="#estimates-of-location" id="toc-estimates-of-location" class="nav-link" data-scroll-target="#estimates-of-location">Estimates of Location</a>
+  <ul class="collapse">
+  <li><a href="#example-location-estimates-of-population-and-murder-rates" id="toc-example-location-estimates-of-population-and-murder-rates" class="nav-link" data-scroll-target="#example-location-estimates-of-population-and-murder-rates">Example: Location Estimates of Population and Murder Rates</a></li>
+  </ul></li>
+  <li><a href="#estimates-of-variability" id="toc-estimates-of-variability" class="nav-link" data-scroll-target="#estimates-of-variability">Estimates of Variability</a>
+  <ul class="collapse">
+  <li><a href="#example-variability-estimates-of-state-population" id="toc-example-variability-estimates-of-state-population" class="nav-link" data-scroll-target="#example-variability-estimates-of-state-population">Example: Variability Estimates of State Population</a></li>
+  </ul></li>
+  <li><a href="#exploring-the-data-distribution" id="toc-exploring-the-data-distribution" class="nav-link" data-scroll-target="#exploring-the-data-distribution">Exploring the Data Distribution</a>
+  <ul class="collapse">
+  <li><a href="#percentiles-and-boxplots" id="toc-percentiles-and-boxplots" class="nav-link" data-scroll-target="#percentiles-and-boxplots">Percentiles and Boxplots</a></li>
+  <li><a href="#frequency-tables-and-histograms" id="toc-frequency-tables-and-histograms" class="nav-link" data-scroll-target="#frequency-tables-and-histograms">Frequency Tables and Histograms</a></li>
+  <li><a href="#density-plots-and-estimates" id="toc-density-plots-and-estimates" class="nav-link" data-scroll-target="#density-plots-and-estimates">Density Plots and Estimates</a></li>
+  </ul></li>
+  <li><a href="#exploring-binary-and-categorical-data" id="toc-exploring-binary-and-categorical-data" class="nav-link" data-scroll-target="#exploring-binary-and-categorical-data">Exploring Binary and Categorical Data</a></li>
+  <li><a href="#correlation" id="toc-correlation" class="nav-link" data-scroll-target="#correlation">Correlation</a>
+  <ul class="collapse">
+  <li><a href="#scatterplots" id="toc-scatterplots" class="nav-link" data-scroll-target="#scatterplots">Scatterplots</a></li>
+  </ul></li>
+  <li><a href="#exploring-two-or-more-variables" id="toc-exploring-two-or-more-variables" class="nav-link" data-scroll-target="#exploring-two-or-more-variables">Exploring Two or More Variables</a>
+  <ul class="collapse">
+  <li><a href="#hexagonal-binning-and-contours-passspan-classkeep-togetherplotting-numeric-versus-numeric-data" id="toc-hexagonal-binning-and-contours-passspan-classkeep-togetherplotting-numeric-versus-numeric-data" class="nav-link" data-scroll-target="#hexagonal-binning-and-contours-passspan-classkeep-togetherplotting-numeric-versus-numeric-data">Hexagonal Binning and Contours pass:[&lt;span class#“keep-together”&gt;(Plotting Numeric-Versus-Numeric Data)]</a></li>
+  <li><a href="#two-categorical-variables" id="toc-two-categorical-variables" class="nav-link" data-scroll-target="#two-categorical-variables">Two Categorical Variables</a></li>
+  <li><a href="#categorical-and-numeric-data" id="toc-categorical-and-numeric-data" class="nav-link" data-scroll-target="#categorical-and-numeric-data">Categorical and Numeric Data</a></li>
+  <li><a href="#visualizing-multiple-variables" id="toc-visualizing-multiple-variables" class="nav-link" data-scroll-target="#visualizing-multiple-variables">Visualizing Multiple Variables</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#supplementary-material" id="toc-supplementary-material" class="nav-link" data-scroll-target="#supplementary-material">Supplementary Material</a>
+  <ul>
+  <li><a href="#table-1-2.-a-few-rows-of-the-data.frame-state-of-population-and-murder-rate-by-state" id="toc-table-1-2.-a-few-rows-of-the-data.frame-state-of-population-and-murder-rate-by-state" class="nav-link" data-scroll-target="#table-1-2.-a-few-rows-of-the-data.frame-state-of-population-and-murder-rate-by-state">Table 1-2. A few rows of the data.frame state of population and murder rate by state</a></li>
+  <li><a href="#table-1-4.-percentiles-of-murder-rate-by-state" id="toc-table-1-4.-percentiles-of-murder-rate-by-state" class="nav-link" data-scroll-target="#table-1-4.-percentiles-of-murder-rate-by-state">Table 1-4. Percentiles of murder rate by state</a></li>
+  <li><a href="#table-1-5.-a-frequency-table-of-population-by-state" id="toc-table-1-5.-a-frequency-table-of-population-by-state" class="nav-link" data-scroll-target="#table-1-5.-a-frequency-table-of-population-by-state">Table 1-5. A frequency table of population by state</a></li>
+  <li><a href="#table-1-6.-percentage-of-delays-by-cause-at-dallasfort-worth-airport" id="toc-table-1-6.-percentage-of-delays-by-cause-at-dallasfort-worth-airport" class="nav-link" data-scroll-target="#table-1-6.-percentage-of-delays-by-cause-at-dallasfort-worth-airport">Table 1-6. Percentage of delays by cause at Dallas/Fort Worth Airport</a></li>
+  <li><a href="#table-1-7.-correlation-between-telecommunication-stock-returns" id="toc-table-1-7.-correlation-between-telecommunication-stock-returns" class="nav-link" data-scroll-target="#table-1-7.-correlation-between-telecommunication-stock-returns">Table 1-7. Correlation between telecommunication stock returns</a></li>
+  <li><a href="#figure-1-6.-correlation-between-etf-returns-python-version" id="toc-figure-1-6.-correlation-between-etf-returns-python-version" class="nav-link" data-scroll-target="#figure-1-6.-correlation-between-etf-returns-python-version">Figure 1-6. Correlation between ETF returns (Python version)</a></li>
+  <li><a href="#figure-1-6.-correlation-between-etf-returns-using-a-heat-map-r-version" id="toc-figure-1-6.-correlation-between-etf-returns-using-a-heat-map-r-version" class="nav-link" data-scroll-target="#figure-1-6.-correlation-between-etf-returns-using-a-heat-map-r-version">Figure 1-6. Correlation between ETF returns using a heat map (R version)</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">Chapter 1: Exploratory Data Analysis</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<blockquote class="blockquote">
+<ol start="3" type="a">
+<li>2019-2026 Peter C. Bruce, Andrew Bruce, Peter Gedeck</li>
+</ol>
+</blockquote>
+<div id="2" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> langchain_core.prompts <span class="im">import</span> PromptTemplate</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> langchain_openai <span class="im">import</span> ChatOpenAI</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.collections <span class="im">import</span> EllipseCollection</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> Normalize</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> trim_mean</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels <span class="im">import</span> robust</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> mlba</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> wquantiles</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>random.seed(<span class="dv">123</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Location of the data files. Adjust this path if you keep the data</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># files in a different directory.</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="op">=</span> Path(<span class="st">'../data'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="exploratory-data-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory Data Analysis</h2>
+<section id="data-dictionaries-and-catalogs" class="level3">
+<h3 class="anchored" data-anchor-id="data-dictionaries-and-catalogs">Data Dictionaries and Catalogs</h3>
+<div id="4" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>PROMPT <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="st">Improve the attached data dictionary and return it in YAML format. In addition</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="st">to the description of features, provide name, description, source, and size</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="st">of the dataset.</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="st">For each feature, provide the following information:</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="st">- feature name</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="st">- readable variable name (if required)</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="st">- definition of the variable</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="st">- data type</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="st">- measurement units</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="st">- allowed values (for categorical or nominal features, but only if you are sure)</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="st">Here is the data dictionary in YAML format:</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="sc">{data_dictionary}</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="st">First ten lines of the dataset in CSV format:</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="sc">{data_sample}</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="5" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>chain <span class="op">=</span> (</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  PromptTemplate.from_template(PROMPT) <span class="op">|</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  ChatOpenAI(model<span class="op">=</span><span class="st">"gpt-5"</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="6" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data_dictionary <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="st">name: ebay Auctions</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="st">description: &gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="st">    The dataset eBayAuctions.csv contains information on 1972 auctions that</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="st">    transacted on eBay.com during May-June 2004.</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="st">source: Copyright 2016 Galit Shmueli and Peter Bruce</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="st">size:</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="st">    observations: 1972</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="st">    features: 8</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="st">features:</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="st">    Category: Category of the auctioned item</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="st">    currency: "US: US dollar, GBP: English pound, EUR: Euro"</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="st">    sellerRating: &gt;</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="st">        a rating by eBay, as a function of the number of "good" and  "bad"</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="st">        transactions the seller had on eBay</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="st">    Duration: Number of days the auction lasted (set by seller at auction start)</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="st">    endDay: Day of week that the auction closed</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="st">    ClosePrice: Price item sold at (converted into USD)</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="st">    OpenPrice: Initial price set by the seller (converted into USD)</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="st">    Competitive?: whether the auction had a single bid (0) or more (1)</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>eBayAuctions <span class="op">=</span> mlba.load_data(<span class="st">"eBayAuctions"</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>data_sample <span class="op">=</span> eBayAuctions.sample(<span class="dv">10</span>, random_state<span class="op">=</span><span class="dv">123</span>).to_csv(index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>context <span class="op">=</span> {</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">"data_dictionary"</span>: data_dictionary,</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">"data_sample"</span>: data_sample,</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> chain.invoke(context)</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(result.content)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>name: eBay Auctions (May–June 2004)
+description: &gt;
+  Dataset of 1,972 completed auctions on eBay.com during May–June 2004.
+  Records include listing category, listing currency, seller feedback rating,
+  auction duration, day-of-week the auction ended, opening price (USD),
+  closing price (USD), and an indicator of whether the auction received
+  multiple bids (competitive). Note: OpenPrice and ClosePrice are converted
+  to U.S. dollars regardless of the listing currency; currency records the
+  currency in which the auction was originally listed.
+source: Copyright 2016 Galit Shmueli and Peter Bruce (eBayAuctions.csv)
+size:
+  observations: 1972
+  features: 8
+features:
+  - name: Category
+    readable_name: category
+    definition: Top-level category of the auctioned item as shown on the eBay listing.
+    data_type: categorical (string)
+    measurement_units: none
+
+  - name: currency
+    readable_name: listing_currency
+    definition: Currency in which the auction was listed; prices in this dataset are converted to USD.
+    data_type: categorical (string; code)
+    measurement_units: none
+    allowed_values:
+      - code: US
+        label: U.S. dollar (USD)
+      - code: GBP
+        label: British pound sterling (GBP)
+      - code: EUR
+        label: Euro (EUR)
+
+  - name: sellerRating
+    readable_name: seller_rating
+    definition: Seller’s feedback rating on eBay at the time of the auction; higher values indicate more positive history.
+    data_type: integer (non-negative)
+    measurement_units: rating points
+
+  - name: Duration
+    readable_name: duration_days
+    definition: Number of days the auction lasted (set by the seller at auction start).
+    data_type: integer
+    measurement_units: days
+    allowed_values: [1, 3, 5, 7, 10]
+
+  - name: endDay
+    readable_name: end_day_of_week
+    definition: Day of the week on which the auction closed.
+    data_type: categorical (string; day-of-week)
+    measurement_units: none
+    allowed_values: [Sun, Mon, Tue, Wed, Thu, Fri, Sat]
+
+  - name: ClosePrice
+    readable_name: close_price_usd
+    definition: Final transaction price (winning bid) of the auction, converted to U.S. dollars.
+    data_type: float (decimal)
+    measurement_units: USD
+
+  - name: OpenPrice
+    readable_name: open_price_usd
+    definition: Initial starting price set by the seller, converted to U.S. dollars.
+    data_type: float (decimal)
+    measurement_units: USD
+
+  - name: Competitive?
+    readable_name: is_competitive
+    definition: Indicator of whether the auction received more than one bid (competitive) versus a single bid.
+    data_type: integer (binary)
+    measurement_units: none
+    allowed_values:
+      - value: 0
+        label: Single bid (not competitive)
+      - value: 1
+        label: Multiple bids (competitive)</code></pre>
+</div>
+</div>
+</section>
+<section id="estimates-of-location" class="level3">
+<h3 class="anchored" data-anchor-id="estimates-of-location">Estimates of Location</h3>
+<section id="example-location-estimates-of-population-and-murder-rates" class="level4">
+<h4 class="anchored" data-anchor-id="example-location-estimates-of-population-and-murder-rates">Example: Location Estimates of Population and Murder Rates</h4>
+<div id="8" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>state <span class="op">=</span> pd.read_csv(DATA_DIR <span class="op">/</span> <span class="st">"state.csv"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Mean: </span><span class="sc">{</span>state[<span class="st">'Population'</span>]<span class="sc">.</span>mean()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Trimmed mean: </span><span class="sc">{</span>trim_mean(state[<span class="st">'Population'</span>], <span class="fl">0.1</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Median: </span><span class="sc">{</span>state[<span class="st">'Population'</span>]<span class="sc">.</span>median()<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Mean: 6162876.3
+Trimmed mean: 4783697.125
+Median: 4436369.5</code></pre>
+</div>
+</div>
+<div id="9" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>weighted_mean <span class="op">=</span> np.average(state[<span class="st">"Murder.Rate"</span>], weights<span class="op">=</span>state[<span class="st">"Population"</span>])</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>weighted_quantile <span class="op">=</span> wquantiles.median(state[<span class="st">"Murder.Rate"</span>],</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                                      weights<span class="op">=</span>state[<span class="st">"Population"</span>])</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Weighted mean: </span><span class="sc">{</span>weighted_mean<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Weighted median: </span><span class="sc">{</span>weighted_quantile<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Weighted mean: 4.445833981123393
+Weighted median: 4.4</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="estimates-of-variability" class="level3">
+<h3 class="anchored" data-anchor-id="estimates-of-variability">Estimates of Variability</h3>
+<section id="example-variability-estimates-of-state-population" class="level4">
+<h4 class="anchored" data-anchor-id="example-variability-estimates-of-state-population">Example: Variability Estimates of State Population</h4>
+<div id="11" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(state[<span class="st">"Population"</span>].std())</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(state[<span class="st">"Population"</span>].quantile(<span class="fl">0.75</span>) <span class="op">-</span> state[<span class="st">"Population"</span>].quantile(<span class="fl">0.25</span>))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(robust.scale.mad(state[<span class="st">"Population"</span>]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>6848235.347401142
+4847308.0
+3849876.1459979336</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="exploring-the-data-distribution" class="level3">
+<h3 class="anchored" data-anchor-id="exploring-the-data-distribution">Exploring the Data Distribution</h3>
+<section id="percentiles-and-boxplots" class="level4">
+<h4 class="anchored" data-anchor-id="percentiles-and-boxplots">Percentiles and Boxplots</h4>
+<div id="13" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>state[[<span class="st">"Murder.Rate"</span>]].quantile([<span class="fl">0.05</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">0.95</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Murder.Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0.05</th>
+<td>1.600</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">0.25</th>
+<td>2.425</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0.50</th>
+<td>4.000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">0.75</th>
+<td>5.550</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0.95</th>
+<td>6.510</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="14" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> (state[<span class="st">"Population"</span>] <span class="op">/</span> <span class="dv">1_000_000</span>).plot.box(figsize<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">4</span>))</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Population (millions)"</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ch01_files/figure-html/cell-10-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="frequency-tables-and-histograms" class="level4">
+<h4 class="anchored" data-anchor-id="frequency-tables-and-histograms">Frequency Tables and Histograms</h4>
+<div id="16" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>binned_population <span class="op">=</span> pd.cut(state[<span class="st">"Population"</span>], <span class="dv">10</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>binned_population.value_counts()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>Population
+(526935.67, 4232659.0]      24
+(4232659.0, 7901692.0]      14
+(7901692.0, 11570725.0]      6
+(11570725.0, 15239758.0]     2
+(15239758.0, 18908791.0]     1
+(18908791.0, 22577824.0]     1
+(22577824.0, 26246857.0]     1
+(33584923.0, 37253956.0]     1
+(26246857.0, 29915890.0]     0
+(29915890.0, 33584923.0]     0
+Name: count, dtype: int64</code></pre>
+</div>
+</div>
+<div id="17" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> (state[<span class="st">"Population"</span>] <span class="op">/</span> <span class="dv">1_000_000</span>).plot.hist(figsize<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">4</span>))</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Population (millions)"</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ch01_files/figure-html/cell-12-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="density-plots-and-estimates" class="level4">
+<h4 class="anchored" data-anchor-id="density-plots-and-estimates">Density Plots and Estimates</h4>
+<div id="19" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> state[<span class="st">"Murder.Rate"</span>].plot.hist(density<span class="op">=</span><span class="va">True</span>, xlim<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">12</span>],</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    bins<span class="op">=</span><span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">12</span>))</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>state[<span class="st">"Murder.Rate"</span>].plot.density(ax<span class="op">=</span>ax)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Murder Rate (per 100,000)"</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ch01_files/figure-html/cell-13-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="exploring-binary-and-categorical-data" class="level3">
+<h3 class="anchored" data-anchor-id="exploring-binary-and-categorical-data">Exploring Binary and Categorical Data</h3>
+<div id="21" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>dfw <span class="op">=</span> pd.read_csv(DATA_DIR <span class="op">/</span> <span class="st">"dfw_airline.csv"</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> dfw.transpose().plot.bar(figsize<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">4</span>), legend<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Cause of delay"</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Count"</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ch01_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="correlation" class="level3">
+<h3 class="anchored" data-anchor-id="correlation">Correlation</h3>
+<div id="23" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>sp500_px <span class="op">=</span> pd.read_csv(DATA_DIR <span class="op">/</span> <span class="st">"sp500_data.csv.gz"</span>, index_col<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>sp500_sym <span class="op">=</span> pd.read_csv(DATA_DIR <span class="op">/</span> <span class="st">"sp500_sectors.csv"</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>etf_symbols <span class="op">=</span> sp500_sym[sp500_sym[<span class="st">"sector"</span>] <span class="op">==</span> <span class="st">"etf"</span>][<span class="st">"symbol"</span>]</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>etfs <span class="op">=</span> sp500_px.loc[sp500_px.index <span class="op">&gt;</span> <span class="st">"2012-07-01"</span>, etf_symbols]</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>sns.heatmap(etfs.corr(), vmin<span class="op">=-</span><span class="dv">1</span>, vmax<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  cmap<span class="op">=</span>sns.diverging_palette(<span class="dv">20</span>, <span class="dv">220</span>, as_cmap<span class="op">=</span><span class="va">True</span>))</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ch01_files/figure-html/cell-15-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="scatterplots" class="level4">
+<h4 class="anchored" data-anchor-id="scatterplots">Scatterplots</h4>
+<div id="25" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter data for dates July 2012 through June 2015</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>telecom <span class="op">=</span> sp500_px.loc[sp500_px.index <span class="op">&gt;=</span> <span class="st">"2012-07-01"</span>, :]</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> telecom.plot.scatter(x<span class="op">=</span><span class="st">"T"</span>, y<span class="op">=</span><span class="st">"VZ"</span>, figsize<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">4</span>), marker<span class="op">=</span><span class="st">"$</span><span class="ch">\u25EF</span><span class="st">$"</span>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"ATT (T)"</span>)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Verizon (VZ)"</span>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>ax.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">"grey"</span>, lw<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>ax.axvline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">"grey"</span>, lw<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ch01_files/figure-html/cell-16-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="exploring-two-or-more-variables" class="level3">
+<h3 class="anchored" data-anchor-id="exploring-two-or-more-variables">Exploring Two or More Variables</h3>
+<section id="hexagonal-binning-and-contours-passspan-classkeep-togetherplotting-numeric-versus-numeric-data" class="level4">
+<h4 class="anchored" data-anchor-id="hexagonal-binning-and-contours-passspan-classkeep-togetherplotting-numeric-versus-numeric-data">Hexagonal Binning and Contours pass:[&lt;span class#“keep-together”&gt;(Plotting Numeric-Versus-Numeric Data)]</h4>
+<div id="27" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>kc_tax <span class="op">=</span> pd.read_csv(DATA_DIR <span class="op">/</span> <span class="st">"kc_tax.csv.gz"</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>kc_tax0 <span class="op">=</span> kc_tax.loc[(kc_tax.TaxAssessedValue <span class="op">&lt;</span> <span class="dv">750000</span>) <span class="op">&amp;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                     (kc_tax.SqFtTotLiving <span class="op">&gt;</span> <span class="dv">100</span>) <span class="op">&amp;</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>                     (kc_tax.SqFtTotLiving <span class="op">&lt;</span> <span class="dv">3500</span>), :]</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>kc_tax0.shape</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>(432693, 3)</code></pre>
+</div>
+</div>
+<div id="28" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> kc_tax0.plot.hexbin(x<span class="op">=</span><span class="st">"SqFtTotLiving"</span>, y<span class="op">=</span><span class="st">"TaxAssessedValue"</span>,</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                         gridsize<span class="op">=</span><span class="dv">30</span>, sharex<span class="op">=</span><span class="va">False</span>, figsize<span class="op">=</span>(<span class="dv">5</span>, <span class="dv">4</span>))</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Finished Square Feet"</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Tax-Assessed Value"</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ch01_files/figure-html/cell-18-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="29" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> sns.kdeplot(data<span class="op">=</span>kc_tax0.sample(<span class="dv">10000</span>), x<span class="op">=</span><span class="st">"SqFtTotLiving"</span>,</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span><span class="st">"TaxAssessedValue"</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Finished Square Feet"</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Tax-Assessed Value"</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ch01_files/figure-html/cell-19-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="two-categorical-variables" class="level4">
+<h4 class="anchored" data-anchor-id="two-categorical-variables">Two Categorical Variables</h4>
+<div id="31" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>lc_loans <span class="op">=</span> pd.read_csv(DATA_DIR <span class="op">/</span> <span class="st">"lc_loans.csv"</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>crosstab <span class="op">=</span> lc_loans.pivot_table(index<span class="op">=</span><span class="st">"grade"</span>, columns<span class="op">=</span><span class="st">"status"</span>,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                                aggfunc<span class="op">=</span><span class="bu">len</span>, margins<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(crosstab)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> crosstab.loc[<span class="st">"A"</span>:<span class="st">"G"</span>, :].copy()</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>perc_crosstab <span class="op">=</span> df.loc[:, <span class="st">"Charged Off"</span>:<span class="st">"Late"</span>].div(df[<span class="st">"All"</span>], axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>perc_crosstab[<span class="st">"All"</span>] <span class="op">=</span> df[<span class="st">"All"</span>] <span class="op">/</span> <span class="bu">sum</span>(df[<span class="st">"All"</span>])</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(perc_crosstab)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>status  Charged Off  Current  Fully Paid  Late     All
+grade                                                 
+A              1562    50051       20408   469   72490
+B              5302    93852       31160  2056  132370
+C              6023    88928       23147  2777  120875
+D              5007    53281       13681  2308   74277
+E              2842    24639        5949  1374   34804
+F              1526     8444        2328   606   12904
+G               409     1990         643   199    3241
+All           22671   321185       97316  9789  450961
+status  Charged Off   Current  Fully Paid      Late       All
+grade                                                        
+A          0.021548  0.690454    0.281528  0.006470  0.160746
+B          0.040054  0.709013    0.235401  0.015532  0.293529
+C          0.049828  0.735702    0.191495  0.022974  0.268039
+D          0.067410  0.717328    0.184189  0.031073  0.164708
+E          0.081657  0.707936    0.170929  0.039478  0.077177
+F          0.118258  0.654371    0.180409  0.046962  0.028614
+G          0.126196  0.614008    0.198396  0.061401  0.007187</code></pre>
+</div>
+</div>
+</section>
+<section id="categorical-and-numeric-data" class="level4">
+<h4 class="anchored" data-anchor-id="categorical-and-numeric-data">Categorical and Numeric Data</h4>
+<div id="33" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>airline_stats <span class="op">=</span> pd.read_csv(DATA_DIR <span class="op">/</span> <span class="st">"airline_stats.csv"</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> airline_stats.boxplot(by<span class="op">=</span><span class="st">"airline"</span>, column<span class="op">=</span><span class="st">"pct_carrier_delay"</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">""</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Daily </span><span class="sc">% o</span><span class="st">f Delayed Flights"</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">""</span>)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ch01_files/figure-html/cell-21-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="34" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> sns.violinplot(data<span class="op">=</span>airline_stats, x<span class="op">=</span><span class="st">"airline"</span>, y<span class="op">=</span><span class="st">"pct_carrier_delay"</span>,</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>                    inner<span class="op">=</span><span class="st">"quartile"</span>, color<span class="op">=</span><span class="st">"white"</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">""</span>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Daily </span><span class="sc">% o</span><span class="st">f Delayed Flights"</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ch01_files/figure-html/cell-22-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="visualizing-multiple-variables" class="level4">
+<h4 class="anchored" data-anchor-id="visualizing-multiple-variables">Visualizing Multiple Variables</h4>
+<div id="36" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>zip_codes <span class="op">=</span> [<span class="dv">98188</span>, <span class="dv">98105</span>, <span class="dv">98108</span>, <span class="dv">98126</span>]</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>kc_tax_zip <span class="op">=</span> kc_tax0.loc[kc_tax0.ZipCode.isin(zip_codes), :]</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> hexbin(x, y, color, <span class="op">**</span>kwargs):</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    cmap <span class="op">=</span> sns.light_palette(color, as_cmap<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    plt.hexbin(x, y, gridsize<span class="op">=</span><span class="dv">25</span>, cmap<span class="op">=</span>cmap, <span class="op">**</span>kwargs)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> sns.FacetGrid(kc_tax_zip, col<span class="op">=</span><span class="st">"ZipCode"</span>, col_wrap<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>g.<span class="bu">map</span>(hexbin, <span class="st">"SqFtTotLiving"</span>, <span class="st">"TaxAssessedValue"</span>,</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>      extent<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">3500</span>, <span class="dv">0</span>, <span class="dv">700000</span>])</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>g.set_axis_labels(<span class="st">"Finished Square Feet"</span>, <span class="st">"Tax-Assessed Value"</span>)</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>g.set_titles(<span class="st">"Zip code </span><span class="sc">{col_name:.0f}</span><span class="st">"</span>)</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ch01_files/figure-html/cell-23-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="supplementary-material" class="level1">
+<h1>Supplementary Material</h1>
+<section id="table-1-2.-a-few-rows-of-the-data.frame-state-of-population-and-murder-rate-by-state" class="level2">
+<h2 class="anchored" data-anchor-id="table-1-2.-a-few-rows-of-the-data.frame-state-of-population-and-murder-rate-by-state">Table 1-2. A few rows of the data.frame state of population and murder rate by state</h2>
+<div id="38" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(state.head(<span class="dv">8</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         State  Population  Murder.Rate Abbreviation
+0      Alabama     4779736          5.7           AL
+1       Alaska      710231          5.6           AK
+2      Arizona     6392017          4.7           AZ
+3     Arkansas     2915918          5.6           AR
+4   California    37253956          4.4           CA
+5     Colorado     5029196          2.8           CO
+6  Connecticut     3574097          2.4           CT
+7     Delaware      897934          5.8           DE</code></pre>
+</div>
+</div>
+</section>
+<section id="table-1-4.-percentiles-of-murder-rate-by-state" class="level2">
+<h2 class="anchored" data-anchor-id="table-1-4.-percentiles-of-murder-rate-by-state">Table 1-4. Percentiles of murder rate by state</h2>
+<div id="40" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>percentages <span class="op">=</span> [<span class="fl">0.05</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">0.95</span>]</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(state[<span class="st">"Murder.Rate"</span>].quantile(percentages))</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>df.index <span class="op">=</span> [<span class="ss">f"</span><span class="sc">{</span>p <span class="op">*</span> <span class="dv">100</span><span class="sc">}</span><span class="ss">%"</span> <span class="cf">for</span> p <span class="kw">in</span> percentages]</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.transpose())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             5.0%  25.0%  50.0%  75.0%  95.0%
+Murder.Rate   1.6  2.425    4.0   5.55   6.51</code></pre>
+</div>
+</div>
+</section>
+<section id="table-1-5.-a-frequency-table-of-population-by-state" class="level2">
+<h2 class="anchored" data-anchor-id="table-1-5.-a-frequency-table-of-population-by-state">Table 1-5. A frequency table of population by state</h2>
+<div id="42" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>binnedPopulation <span class="op">=</span> pd.cut(state[<span class="st">"Population"</span>], <span class="dv">10</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(binnedPopulation.value_counts())</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>binnedPopulation.name <span class="op">=</span> <span class="st">"binnedPopulation"</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.concat([state, binnedPopulation], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.sort_values(by<span class="op">=</span><span class="st">"Population"</span>)</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>groups <span class="op">=</span> []</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> group, subset <span class="kw">in</span> df.groupby(by<span class="op">=</span><span class="st">"binnedPopulation"</span>, observed<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    groups.append({</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"BinRange"</span>: group,</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Count"</span>: <span class="bu">len</span>(subset),</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"States"</span>: <span class="st">","</span>.join(subset.Abbreviation),</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(groups)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Population
+(526935.67, 4232659.0]      24
+(4232659.0, 7901692.0]      14
+(7901692.0, 11570725.0]      6
+(11570725.0, 15239758.0]     2
+(15239758.0, 18908791.0]     1
+(18908791.0, 22577824.0]     1
+(22577824.0, 26246857.0]     1
+(33584923.0, 37253956.0]     1
+(26246857.0, 29915890.0]     0
+(29915890.0, 33584923.0]     0
+Name: count, dtype: int64</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="25">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">BinRange</th>
+<th data-quarto-table-cell-role="th">Count</th>
+<th data-quarto-table-cell-role="th">States</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>(526935.67, 4232659.0]</td>
+<td>24</td>
+<td>WY,VT,ND,AK,SD,DE,MT,RI,NH,ME,HI,ID,NE,WV,NM,N...</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>(4232659.0, 7901692.0]</td>
+<td>14</td>
+<td>KY,LA,SC,AL,CO,MN,WI,MD,MO,TN,AZ,IN,MA,WA</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>(7901692.0, 11570725.0]</td>
+<td>6</td>
+<td>VA,NJ,NC,GA,MI,OH</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>(11570725.0, 15239758.0]</td>
+<td>2</td>
+<td>PA,IL</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>(15239758.0, 18908791.0]</td>
+<td>1</td>
+<td>FL</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>(18908791.0, 22577824.0]</td>
+<td>1</td>
+<td>NY</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">6</th>
+<td>(22577824.0, 26246857.0]</td>
+<td>1</td>
+<td>TX</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">7</th>
+<td>(26246857.0, 29915890.0]</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">8</th>
+<td>(29915890.0, 33584923.0]</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">9</th>
+<td>(33584923.0, 37253956.0]</td>
+<td>1</td>
+<td>CA</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="table-1-6.-percentage-of-delays-by-cause-at-dallasfort-worth-airport" class="level2">
+<h2 class="anchored" data-anchor-id="table-1-6.-percentage-of-delays-by-cause-at-dallasfort-worth-airport">Table 1-6. Percentage of delays by cause at Dallas/Fort Worth Airport</h2>
+<div id="44" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>dfw <span class="op">=</span> pd.read_csv(DATA_DIR <span class="op">/</span> <span class="st">"dfw_airline.csv"</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="dv">100</span> <span class="op">*</span> dfw <span class="op">/</span> dfw.to_numpy().<span class="bu">sum</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Carrier        ATC   Weather  Security    Inbound
+0  23.022989  30.400781  4.025214  0.122937  42.428079</code></pre>
+</div>
+</div>
+</section>
+<section id="table-1-7.-correlation-between-telecommunication-stock-returns" class="level2">
+<h2 class="anchored" data-anchor-id="table-1-7.-correlation-between-telecommunication-stock-returns">Table 1-7. Correlation between telecommunication stock returns</h2>
+<div id="46" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>telecomSymbols <span class="op">=</span> sp500_sym[sp500_sym[<span class="st">"sector"</span>] <span class="op">==</span> <span class="st">"telecommunications_services"</span>][<span class="st">"symbol"</span>]</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter data for dates July 2012 through June 2015</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>telecom <span class="op">=</span> sp500_px.loc[sp500_px.index <span class="op">&gt;=</span> <span class="st">"2012-07-01"</span>, telecomSymbols]</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>telecom.corr()</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(telecom)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   T       CTL       FTR        VZ      LVLT
+Date                                                        
+2012-07-02  0.422496  0.140847  0.070879  0.554180 -0.519998
+2012-07-03 -0.177448  0.066280  0.070879 -0.025976 -0.049999
+2012-07-05 -0.160548 -0.132563  0.055128 -0.051956 -0.180000
+2012-07-06  0.342205  0.132563  0.007875  0.140106 -0.359999
+2012-07-09  0.136883  0.124279 -0.023626  0.253943  0.180000
+...              ...       ...       ...       ...       ...
+2015-06-25  0.049342 -1.600000 -0.040000 -0.187790 -0.330002
+2015-06-26 -0.256586  0.039999 -0.070000  0.029650 -0.739998
+2015-06-29 -0.098685 -0.559999 -0.060000 -0.504063 -1.360000
+2015-06-30 -0.503298 -0.420000 -0.070000 -0.523829  0.199997
+2015-07-01 -0.019737  0.080000 -0.050000  0.355811  0.139999
+
+[754 rows x 5 columns]</code></pre>
+</div>
+</div>
+<div id="47" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>etfs <span class="op">=</span> sp500_px.loc[sp500_px.index <span class="op">&gt;</span> <span class="st">"2012-07-01"</span>,</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>                    sp500_sym[sp500_sym[<span class="st">"sector"</span>] <span class="op">==</span> <span class="st">"etf"</span>][<span class="st">"symbol"</span>]]</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(etfs.head())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 XLI       QQQ       SPY       DIA       GLD    VXX       USO  \
+Date                                                                            
+2012-07-02 -0.376098  0.096313  0.028223 -0.242796  0.419998 -10.40  0.000000   
+2012-07-03  0.376099  0.481576  0.874936  0.728405  0.490006  -3.52  0.250000   
+2012-07-05  0.150440  0.096313 -0.103487  0.149420  0.239991   6.56 -0.070000   
+2012-07-06 -0.141040 -0.491201  0.018819 -0.205449 -0.519989  -8.80 -0.180000   
+2012-07-09  0.244465 -0.048160 -0.056445 -0.168094  0.429992  -0.48  0.459999   
+
+                 IWM       XLE       XLY       XLU       XLB       XTL  \
+Date                                                                     
+2012-07-02  0.534641  0.028186  0.095759  0.098311 -0.093713  0.019076   
+2012-07-03  0.926067  0.995942  0.000000 -0.044686  0.337373  0.000000   
+2012-07-05 -0.171848 -0.460387  0.306431 -0.151938  0.103086  0.019072   
+2012-07-06 -0.229128  0.206706  0.153214  0.080437  0.018744 -0.429213   
+2012-07-09 -0.190939 -0.234892 -0.201098 -0.035751 -0.168687  0.000000   
+
+                 XLV       XLP       XLF       XLK  
+Date                                                
+2012-07-02 -0.009529  0.313499  0.018999  0.075668  
+2012-07-03  0.000000  0.129087  0.104492  0.236462  
+2012-07-05 -0.142955 -0.073766 -0.142490  0.066211  
+2012-07-06 -0.095304  0.119865  0.066495 -0.227003  
+2012-07-09  0.352630 -0.064548  0.018999  0.009457  </code></pre>
+</div>
+</div>
+</section>
+<section id="figure-1-6.-correlation-between-etf-returns-python-version" class="level2">
+<h2 class="anchored" data-anchor-id="figure-1-6.-correlation-between-etf-returns-python-version">Figure 1-6. Correlation between ETF returns (Python version)</h2>
+<div id="49" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_corr_ellipses(data, figsize<span class="op">=</span><span class="va">None</span>, <span class="op">**</span>kwargs):</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">""" https://stackoverflow.com/a/34558488 """</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> np.array(data)</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> m.ndim <span class="op">==</span> <span class="dv">2</span>:</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">"data must be a 2D array"</span>)</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>    _, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>figsize, subplot_kw<span class="op">=</span>{<span class="st">"aspect"</span>: <span class="st">"equal"</span>})</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>    ax.set_xlim(<span class="op">-</span><span class="fl">0.5</span>, m.shape[<span class="dv">1</span>] <span class="op">-</span> <span class="fl">0.5</span>)</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>    ax.set_ylim(<span class="op">-</span><span class="fl">0.5</span>, m.shape[<span class="dv">0</span>] <span class="op">-</span> <span class="fl">0.5</span>)</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>    ax.invert_yaxis()</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># xy locations of each ellipse center</span></span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>    xy <span class="op">=</span> np.indices(m.shape)[::<span class="op">-</span><span class="dv">1</span>].reshape(<span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>).T</span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># set the relative sizes of the major/minor axes according to the strength of</span></span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># the positive/negative correlation</span></span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>    w <span class="op">=</span> np.ones_like(m).ravel() <span class="op">+</span> <span class="fl">0.01</span></span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>    h <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> np.<span class="bu">abs</span>(m).ravel() <span class="op">-</span> <span class="fl">0.01</span></span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>    a <span class="op">=</span> <span class="dv">45</span> <span class="op">*</span> np.sign(m).ravel()</span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a>    ec <span class="op">=</span> EllipseCollection(widths<span class="op">=</span>w, heights<span class="op">=</span>h, angles<span class="op">=</span>a, units<span class="op">=</span><span class="st">"x"</span>, offsets<span class="op">=</span>xy,</span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>                           norm<span class="op">=</span>Normalize(vmin<span class="op">=-</span><span class="dv">1</span>, vmax<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>                           transOffset<span class="op">=</span>ax.transData, array<span class="op">=</span>m.ravel(), <span class="op">**</span>kwargs)</span>
+<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a>    ax.add_collection(ec)</span>
+<span id="cb42-24"><a href="#cb42-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-25"><a href="#cb42-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># if data is a DataFrame, use the row/column names as tick labels</span></span>
+<span id="cb42-26"><a href="#cb42-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(data, pd.DataFrame):</span>
+<span id="cb42-27"><a href="#cb42-27" aria-hidden="true" tabindex="-1"></a>        ax.set_xticks(np.arange(m.shape[<span class="dv">1</span>]))</span>
+<span id="cb42-28"><a href="#cb42-28" aria-hidden="true" tabindex="-1"></a>        ax.set_xticklabels(data.columns, rotation<span class="op">=</span><span class="dv">90</span>)</span>
+<span id="cb42-29"><a href="#cb42-29" aria-hidden="true" tabindex="-1"></a>        ax.set_yticks(np.arange(m.shape[<span class="dv">0</span>]))</span>
+<span id="cb42-30"><a href="#cb42-30" aria-hidden="true" tabindex="-1"></a>        ax.set_yticklabels(data.index)</span>
+<span id="cb42-31"><a href="#cb42-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-32"><a href="#cb42-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ec, ax</span>
+<span id="cb42-33"><a href="#cb42-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-34"><a href="#cb42-34" aria-hidden="true" tabindex="-1"></a>m, ax <span class="op">=</span> plot_corr_ellipses(etfs.corr(), figsize<span class="op">=</span>(<span class="dv">5</span>, <span class="dv">4</span>), cmap<span class="op">=</span><span class="st">"bwr_r"</span>)</span>
+<span id="cb42-35"><a href="#cb42-35" aria-hidden="true" tabindex="-1"></a>cb <span class="op">=</span> plt.colorbar(m, ax<span class="op">=</span>ax)</span>
+<span id="cb42-36"><a href="#cb42-36" aria-hidden="true" tabindex="-1"></a>cb.set_label(<span class="st">"Correlation coefficient"</span>)</span>
+<span id="cb42-37"><a href="#cb42-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-38"><a href="#cb42-38" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb42-39"><a href="#cb42-39" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ch01_files/figure-html/cell-30-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="figure-1-6.-correlation-between-etf-returns-using-a-heat-map-r-version" class="level2">
+<h2 class="anchored" data-anchor-id="figure-1-6.-correlation-between-etf-returns-using-a-heat-map-r-version">Figure 1-6. Correlation between ETF returns using a heat map (R version)</h2>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link" aria-label="Preface">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Preface</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./ch02.html" class="pagination-link" aria-label="Chapter 2: Data and Sampling Distributions">
+        <span class="nav-page-text"><span class="chapter-title">Chapter 2: Data and Sampling Distributions</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<hr>
+<div role="contentinfo" aria-label="copyright" class="copyright" style="text-align:center;">Copyright © 2017-2026  Peter Bruce, Andrew Bruce, Peter Gedeck</div>
+<script>
+document.querySelectorAll('.cell-output > pre').forEach(function(el) {
+  el.setAttribute('tabindex', '0');
+});
+document.querySelectorAll('.sidebar-item-text.sidebar-link.text-start').forEach(function(el, idx) {
+  el.setAttribute('aria-label', 'part ' + idx);
+});
+document.querySelectorAll('.sidebar-item-toggle').forEach(function(el, idx) {
+  el.setAttribute('aria-label', 'part ' + idx + ' toggle');
+});
+document.querySelectorAll('#quarto-sidebar').forEach(function(el) {
+  el.setAttribute('aria-label', 'Main site navigation');
+});
+document.querySelectorAll('.quarto-secondary-nav').forEach(function(el) {
+  el.setAttribute('aria-label', 'Secondary navigation');
+});
+document.querySelectorAll('#TOC').forEach(function(el, idx) {
+  el.setAttribute('aria-label', 'Table of Contents for the current page ' + idx);
+});
+</script>
+
+
+
+
+</body></html>
