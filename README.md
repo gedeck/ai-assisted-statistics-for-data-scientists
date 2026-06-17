@@ -27,8 +27,8 @@ by Peter Bruce, Andrew Bruce, and <a href="https://www.amazon.com/Peter-Gedeck/e
 </table>
 
 # Documentation
-- [R code](docs/R/)
-- [Python code](docs/python/)
+- [R code](https://gedeck.github.io/ai-assisted-statistics-for-data-scientists/docs/R/)
+- [Python code](https://gedeck.github.io/ai-assisted-statistics-for-data-scientists/docs/python/)
 
 
 <!-- 
