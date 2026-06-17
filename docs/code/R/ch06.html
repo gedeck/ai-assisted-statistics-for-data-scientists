@@ -1,0 +1,1894 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>6&nbsp; Chapter 6: Statistical Machine Learning – AI-Assisted Statistics for Data Scientists</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ch07.html" rel="next">
+<link href="./ch05.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-5ccb035bea26c1e21f80f44cf7c27909.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ch06.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Chapter 6: Statistical Machine Learning</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">AI-Assisted Statistics for Data Scientists</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Chapter 1: Exploratory Data Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Chapter 2: Data and Sampling Distributions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Chapter 3: Statistical Experiments and Significance Testing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Chapter 4: Regression and Prediction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Chapter 5: Classification</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch06.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Chapter 6: Statistical Machine Learning</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Chapter 7: Unsupervised Learning</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Chapter 8: Neural Networks</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Chapter 9: Deep Learning</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Chapter 10: Generative AI and Large Language Models (LLMs)</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#statistical-machine-learning" id="toc-statistical-machine-learning" class="nav-link active" data-scroll-target="#statistical-machine-learning"><span class="header-section-number">6.1</span> Statistical Machine Learning</a>
+  <ul class="collapse">
+  <li><a href="#k-nearest-neighbors" id="toc-k-nearest-neighbors" class="nav-link" data-scroll-target="#k-nearest-neighbors"><span class="header-section-number">6.1.1</span> K-Nearest Neighbors</a></li>
+  <li><a href="#tree-models" id="toc-tree-models" class="nav-link" data-scroll-target="#tree-models"><span class="header-section-number">6.1.2</span> Tree Models</a></li>
+  <li><a href="#bagging-and-the-random-forest" id="toc-bagging-and-the-random-forest" class="nav-link" data-scroll-target="#bagging-and-the-random-forest"><span class="header-section-number">6.1.3</span> Bagging and the Random Forest</a></li>
+  <li><a href="#boosting" id="toc-boosting" class="nav-link" data-scroll-target="#boosting"><span class="header-section-number">6.1.4</span> Boosting</a></li>
+  </ul></li>
+  <li><a href="#supplementary-material" id="toc-supplementary-material" class="nav-link" data-scroll-target="#supplementary-material"><span class="header-section-number">7</span> Supplementary Material</a>
+  <ul class="collapse">
+  <li><a href="#figure-6-2.-knn-prediction-of-loan-default-using-two-variables-debt-to-income-ratio-and-loan-payment-to-income-ratio" id="toc-figure-6-2.-knn-prediction-of-loan-default-using-two-variables-debt-to-income-ratio-and-loan-payment-to-income-ratio" class="nav-link" data-scroll-target="#figure-6-2.-knn-prediction-of-loan-default-using-two-variables-debt-to-income-ratio-and-loan-payment-to-income-ratio"><span class="header-section-number">7.1</span> Figure 6-2. KNN prediction of loan default using two variables: debt-to-income ratio and loan-payment-to-income ratio</a></li>
+  <li><a href="#figure-6-4.-the-first-five-rules-for-a-simple-tree-model-fit-to-the-loan-data" id="toc-figure-6-4.-the-first-five-rules-for-a-simple-tree-model-fit-to-the-loan-data" class="nav-link" data-scroll-target="#figure-6-4.-the-first-five-rules-for-a-simple-tree-model-fit-to-the-loan-data"><span class="header-section-number">7.2</span> Figure 6-4. The first five rules for a simple tree model fit to the loan data</a></li>
+  <li><a href="#figure-6-5.-gini-impurity-and-entropy-measures" id="toc-figure-6-5.-gini-impurity-and-entropy-measures" class="nav-link" data-scroll-target="#figure-6-5.-gini-impurity-and-entropy-measures"><span class="header-section-number">7.3</span> Figure 6-5. Gini impurity and entropy measures</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Chapter 6: Statistical Machine Learning</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(future)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ranger)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart.plot)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xgboost)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Location of the data files. Adjust this path if you keep the data</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># files in a different directory.</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="ot">&lt;-</span> <span class="st">'../../data'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="statistical-machine-learning" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="statistical-machine-learning"><span class="header-section-number">6.1</span> Statistical Machine Learning</h2>
+<section id="k-nearest-neighbors" class="level3" data-number="6.1.1">
+<h3 data-number="6.1.1" class="anchored" data-anchor-id="k-nearest-neighbors"><span class="header-section-number">6.1.1</span> K-Nearest Neighbors</h3>
+<section id="a-small-example-predicting-loan-default" class="level4" data-number="6.1.1.1">
+<h4 data-number="6.1.1.1" class="anchored" data-anchor-id="a-small-example-predicting-loan-default"><span class="header-section-number">6.1.1.1</span> A Small Example: Predicting Loan Default</h4>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>loan200 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(DATA_DIR, <span class="st">"loan200.csv"</span>), <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">outcome =</span> <span class="fu">factor</span>(outcome, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"paid off"</span>, <span class="st">"default"</span>)))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> loan200 <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">slice</span>(<span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>newloan <span class="ot">&lt;-</span> loan200 <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">slice</span>(<span class="dv">1</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">nearest_neighbor</span>(<span class="at">mode =</span> <span class="st">"classification"</span>, <span class="at">neighbors =</span> <span class="dv">20</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">weight_func =</span> <span class="st">"rectangular"</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>knn_model <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(model) <span class="sc">%&gt;%</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_formula</span>(outcome <span class="sc">~</span> payment_inc_ratio <span class="sc">+</span> dti) <span class="sc">%&gt;%</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(train_data)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>knn_pred <span class="ot">&lt;-</span> knn_model <span class="sc">%&gt;%</span> <span class="fu">predict</span>(newloan)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>knn_pred</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  .pred_class
+  &lt;fct&gt;      
+1 paid off   </code></pre>
+</div>
+</div>
+</section>
+<section id="standardization-normalization-z-scores" class="level4" data-number="6.1.1.2">
+<h4 data-number="6.1.1.2" class="anchored" data-anchor-id="standardization-normalization-z-scores"><span class="header-section-number">6.1.1.2</span> Standardization (Normalization, z-Scores)</h4>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>newloan</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  outcome payment_inc_ratio   dti
+  &lt;fct&gt;               &lt;dbl&gt; &lt;dbl&gt;
+1 &lt;NA&gt;                    9  22.5</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FNN)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>loan_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(DATA_DIR, <span class="st">"loan_data.csv.gz"</span>), <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(index, status)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">where</span>(is.character), as.factor),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">outcome =</span> <span class="fu">factor</span>(outcome, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"paid off"</span>, <span class="st">"default"</span>))</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>loan_df <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> payment_inc_ratio <span class="sc">+</span> dti <span class="sc">+</span> revol_bal <span class="sc">+</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    revol_util, <span class="at">data =</span> loan_data)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>newloan <span class="ot">&lt;-</span> loan_df[<span class="dv">1</span>, , drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>loan_df <span class="ot">&lt;-</span> loan_df[<span class="sc">-</span><span class="dv">1</span>, ]</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>outcome <span class="ot">&lt;-</span> loan_data[<span class="sc">-</span><span class="dv">1</span>, ]<span class="sc">$</span>outcome</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>knn_pred <span class="ot">&lt;-</span> <span class="fu">knn</span>(<span class="at">train =</span> loan_df, <span class="at">test =</span> newloan, <span class="at">cl =</span> outcome, <span class="at">k =</span> <span class="dv">5</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>loan_df[<span class="fu">attr</span>(knn_pred, <span class="st">"nn.index"</span>), ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      payment_inc_ratio  dti revol_bal revol_util
+35537           1.47212 1.46      1686       10.0
+33652           3.38178 6.37      1688        8.4
+25864           2.36303 1.39      1691        3.5
+42954           1.28160 7.14      1684        3.9
+43600           4.12244 8.98      1684        7.2</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>loan_df <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> payment_inc_ratio <span class="sc">+</span> dti <span class="sc">+</span> revol_bal <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    revol_util, <span class="at">data =</span> loan_data)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>loan_std <span class="ot">&lt;-</span> <span class="fu">scale</span>(loan_df)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>newloan_std <span class="ot">&lt;-</span> loan_std[<span class="dv">1</span>, , drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>loan_std <span class="ot">&lt;-</span> loan_std[<span class="sc">-</span><span class="dv">1</span>, ]</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>loan_df <span class="ot">&lt;-</span> loan_df[<span class="sc">-</span><span class="dv">1</span>, ]</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>outcome <span class="ot">&lt;-</span> loan_data[<span class="sc">-</span><span class="dv">1</span>, ]<span class="sc">$</span>outcome</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>knn_pred <span class="ot">&lt;-</span> <span class="fu">knn</span>(<span class="at">train =</span> loan_std, <span class="at">test =</span> newloan_std, <span class="at">cl =</span> outcome, <span class="at">k =</span> <span class="dv">5</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>loan_df[<span class="fu">attr</span>(knn_pred, <span class="st">"nn.index"</span>), ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      payment_inc_ratio  dti revol_bal revol_util
+2081            2.61091 1.03      1218        9.7
+1439            2.34343 0.51       278        9.9
+30216           2.71200 1.34      1075        8.5
+28543           2.39760 0.74      2917        7.4
+44738           2.34309 1.37       488        7.2</code></pre>
+</div>
+</div>
+</section>
+<section id="knn-as-a-feature-engine" class="level4" data-number="6.1.1.3">
+<h4 data-number="6.1.1.3" class="anchored" data-anchor-id="knn-as-a-feature-engine"><span class="header-section-number">6.1.1.3</span> KNN as a Feature Engine</h4>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>rec <span class="ot">&lt;-</span> <span class="fu">recipe</span>(outcome <span class="sc">~</span> dti <span class="sc">+</span> revol_bal <span class="sc">+</span> revol_util <span class="sc">+</span> open_acc <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    delinq_2yrs_zero <span class="sc">+</span> pub_rec_zero, <span class="at">data =</span> loan_data)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">nearest_neighbor</span>(<span class="at">mode =</span> <span class="st">"classification"</span>, <span class="at">neighbors =</span> <span class="dv">20</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">weight_func =</span> <span class="st">"rectangular"</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>borrow_knn <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(<span class="fu">nearest_neighbor</span>(<span class="at">mode =</span> <span class="st">"classification"</span>, <span class="at">neighbors =</span> <span class="dv">20</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(rec) <span class="sc">%&gt;%</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(loan_data)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>borrow_feature <span class="ot">&lt;-</span> borrow_knn <span class="sc">%&gt;%</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(loan_data, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pluck</span>(<span class="st">".pred_default"</span>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(borrow_feature)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.3819  0.5017  0.5001  0.6200  1.0000 </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="tree-models" class="level3" data-number="6.1.2">
+<h3 data-number="6.1.2" class="anchored" data-anchor-id="tree-models"><span class="header-section-number">6.1.2</span> Tree Models</h3>
+<section id="a-simple-example" class="level4" data-number="6.1.2.1">
+<h4 data-number="6.1.2.1" class="anchored" data-anchor-id="a-simple-example"><span class="header-section-number">6.1.2.1</span> A Simple Example</h4>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>loan3000 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(DATA_DIR, <span class="st">"loan3000.csv"</span>), <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">outcome =</span> <span class="fu">factor</span>(outcome, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"paid off"</span>, <span class="st">"default"</span>)))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>loan_tree <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>(<span class="at">mode =</span> <span class="st">"classification"</span>, <span class="at">engine =</span> <span class="st">"rpart"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(outcome <span class="sc">~</span> borrower_score <span class="sc">+</span> payment_inc_ratio, <span class="at">data =</span> loan3000)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(loan_tree <span class="sc">%&gt;%</span> <span class="fu">extract_fit_engine</span>(), <span class="at">roundint =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ch06_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>loan_tree</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>parsnip model object
+
+n= 3000 
+
+node), split, n, loss, yval, (yprob)
+      * denotes terminal node
+
+ 1) root 3000 1445 paid off (0.5183333 0.4816667)  
+   2) borrower_score&gt;=0.575 878  261 paid off (0.7027335 0.2972665) *
+   3) borrower_score&lt; 0.575 2122  938 default (0.4420358 0.5579642)  
+     6) borrower_score&gt;=0.375 1639  802 default (0.4893228 0.5106772)  
+      12) payment_inc_ratio&lt; 10.42265 1157  547 paid off (0.5272256 0.4727744)  
+        24) payment_inc_ratio&lt; 4.42601 334  139 paid off (0.5838323 0.4161677) *
+        25) payment_inc_ratio&gt;=4.42601 823  408 paid off (0.5042527 0.4957473)  
+          50) borrower_score&gt;=0.475 418  190 paid off (0.5454545 0.4545455) *
+          51) borrower_score&lt; 0.475 405  187 default (0.4617284 0.5382716) *
+      13) payment_inc_ratio&gt;=10.42265 482  192 default (0.3983402 0.6016598) *
+     7) borrower_score&lt; 0.375 483  136 default (0.2815735 0.7184265) *</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="bagging-and-the-random-forest" class="level3" data-number="6.1.3">
+<h3 data-number="6.1.3" class="anchored" data-anchor-id="bagging-and-the-random-forest"><span class="header-section-number">6.1.3</span> Bagging and the Random Forest</h3>
+<section id="random-forest" class="level4" data-number="6.1.3.1">
+<h4 data-number="6.1.3.1" class="anchored" data-anchor-id="random-forest"><span class="header-section-number">6.1.3.1</span> Random Forest</h4>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>(<span class="at">mode =</span> <span class="st">"classification"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"ranger"</span>, <span class="at">seed =</span> <span class="dv">123</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(outcome <span class="sc">~</span> borrower_score <span class="sc">+</span> payment_inc_ratio, <span class="at">data =</span> loan3000)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>rf</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>parsnip model object
+
+Ranger result
+
+Call:
+ ranger::ranger(x = maybe_data_frame(x), y = y, seed = ~123, num.threads = 1,      verbose = FALSE, probability = TRUE) 
+
+Type:                             Probability estimation 
+Number of trees:                  500 
+Sample size:                      3000 
+Number of independent variables:  2 
+Mtry:                             1 
+Target node size:                 10 
+Variable importance mode:         none 
+Splitrule:                        gini 
+OOB prediction error (Brier s.):  0.2300053 </code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>num_trees <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fu">seq</span>(<span class="dv">5</span>, <span class="dv">500</span>, <span class="dv">5</span>))</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>oob_scores <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (trees <span class="cf">in</span> num_trees) {</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  rf <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>(<span class="at">mode =</span> <span class="st">"classification"</span>, <span class="at">trees =</span> trees) <span class="sc">%&gt;%</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_engine</span>(<span class="st">"ranger"</span>, <span class="at">seed =</span> <span class="dv">123</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fit</span>(outcome <span class="sc">~</span> borrower_score <span class="sc">+</span> payment_inc_ratio, <span class="at">data =</span> loan3000)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  oob_scores <span class="ot">&lt;-</span> <span class="fu">c</span>(oob_scores, (rf <span class="sc">%&gt;%</span> <span class="fu">extract_fit_engine</span>())<span class="sc">$</span>prediction.error)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>error_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">error_rate =</span> oob_scores, <span class="at">num_trees =</span> num_trees)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(error_df, <span class="fu">aes</span>(<span class="at">x =</span> num_trees, <span class="at">y =</span> error_rate)) <span class="sc">+</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ch06_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>rf_df <span class="ot">&lt;-</span> <span class="fu">augment</span>(rf, loan3000)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> rf_df, <span class="fu">aes</span>(<span class="at">x =</span> borrower_score, <span class="at">y =</span> payment_inc_ratio,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> .pred_class, <span class="at">color =</span> .pred_class, <span class="at">size =</span> .pred_class)) <span class="sc">+</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.8</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">width =</span> <span class="fl">0.003</span>) <span class="sc">+</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"paid off"</span> <span class="ot">=</span> <span class="st">"#b8e186"</span>, <span class="st">"default"</span> <span class="ot">=</span> <span class="st">"#d95f02"</span>)) <span class="sc">+</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"paid off"</span> <span class="ot">=</span> <span class="dv">0</span>, <span class="st">"default"</span> <span class="ot">=</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"paid off"</span> <span class="ot">=</span> <span class="fl">0.5</span>, <span class="st">"default"</span> <span class="ot">=</span> <span class="dv">2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ch06_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="variable-importance" class="level4" data-number="6.1.3.2">
+<h4 data-number="6.1.3.2" class="anchored" data-anchor-id="variable-importance"><span class="header-section-number">6.1.3.2</span> Variable Importance</h4>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>rf_all <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>(<span class="at">mode =</span> <span class="st">"classification"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"ranger"</span>, <span class="at">seed =</span> <span class="dv">123</span>, <span class="at">importance =</span> <span class="st">"impurity"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(outcome <span class="sc">~</span> ., <span class="at">data =</span> loan_data)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>rf_all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>parsnip model object
+
+Ranger result
+
+Call:
+ ranger::ranger(x = maybe_data_frame(x), y = y, seed = ~123, importance = ~"impurity",      num.threads = 1, verbose = FALSE, probability = TRUE) 
+
+Type:                             Probability estimation 
+Number of trees:                  500 
+Sample size:                      45342 
+Number of independent variables:  18 
+Mtry:                             4 
+Target node size:                 10 
+Variable importance mode:         impurity 
+Splitrule:                        gini 
+OOB prediction error (Brier s.):  0.2123043 </code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>rf_permutation <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>(<span class="at">mode =</span> <span class="st">"classification"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"ranger"</span>, <span class="at">seed =</span> <span class="dv">123</span>, <span class="at">importance =</span> <span class="st">"permutation"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(outcome <span class="sc">~</span> ., <span class="at">data =</span> loan_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>varimp_gini <span class="ot">&lt;-</span> <span class="fu">importance</span>(rf_all <span class="sc">%&gt;%</span> <span class="fu">extract_fit_engine</span>())</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>varimp_perm <span class="ot">&lt;-</span> <span class="fu">importance</span>(rf_permutation <span class="sc">%&gt;%</span> <span class="fu">extract_fit_engine</span>())</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">predictor =</span> <span class="fu">names</span>(varimp_gini),</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">impurity =</span> varimp_gini,</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">permutation =</span> varimp_perm</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> permutation, <span class="at">y =</span> <span class="fu">reorder</span>(predictor, permutation))) <span class="sc">+</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Importance"</span>, <span class="at">title =</span> <span class="st">"Accuracy Decrease"</span>)</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> impurity, <span class="at">y =</span> <span class="fu">reorder</span>(predictor, permutation))) <span class="sc">+</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Importance"</span>, <span class="at">title =</span> <span class="st">"Gini Decrease"</span>)</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>(g1 <span class="sc">+</span> <span class="fu">theme_bw</span>()) <span class="sc">/</span> (g2 <span class="sc">+</span> <span class="fu">theme_bw</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ch06_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="boosting" class="level3" data-number="6.1.4">
+<h3 data-number="6.1.4" class="anchored" data-anchor-id="boosting"><span class="header-section-number">6.1.4</span> Boosting</h3>
+<section id="xgboost" class="level4" data-number="6.1.4.1">
+<h4 data-number="6.1.4.1" class="anchored" data-anchor-id="xgboost"><span class="header-section-number">6.1.4.1</span> XGBoost</h4>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>xgb <span class="ot">&lt;-</span> <span class="fu">boost_tree</span>(<span class="at">mode =</span> <span class="st">"classification"</span>,</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">trees =</span> <span class="dv">100</span>, <span class="at">learn_rate =</span> <span class="fl">0.1</span>, <span class="at">sample_size =</span> <span class="fl">0.63</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(outcome <span class="sc">~</span> borrower_score <span class="sc">+</span> payment_inc_ratio, <span class="at">data =</span> loan3000)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>xgb_df <span class="ot">&lt;-</span> <span class="fu">augment</span>(xgb, loan3000)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> xgb_df, <span class="fu">aes</span>(<span class="at">x =</span> borrower_score, <span class="at">y =</span> payment_inc_ratio,</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> .pred_class, <span class="at">shape =</span> .pred_class, <span class="at">size =</span> .pred_class)) <span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.8</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">width =</span> <span class="fl">0.003</span>) <span class="sc">+</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"paid off"</span> <span class="ot">=</span> <span class="st">"#b8e186"</span>, <span class="st">"default"</span> <span class="ot">=</span> <span class="st">"#d95f02"</span>)) <span class="sc">+</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"paid off"</span> <span class="ot">=</span> <span class="dv">0</span>, <span class="st">"default"</span> <span class="ot">=</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"paid off"</span> <span class="ot">=</span> <span class="fl">0.5</span>, <span class="st">"default"</span> <span class="ot">=</span> <span class="dv">2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ch06_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="regularization-avoiding-overfitting" class="level4" data-number="6.1.4.2">
+<h4 data-number="6.1.4.2" class="anchored" data-anchor-id="regularization-avoiding-overfitting"><span class="header-section-number">6.1.4.2</span> Regularization: Avoiding Overfitting</h4>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">400820</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>loan_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(loan_data, <span class="at">prop =</span> <span class="fl">0.75</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> <span class="fu">training</span>(loan_split)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> <span class="fu">testing</span>(loan_split)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>train_x <span class="ot">&lt;-</span> <span class="fu">data.matrix</span>(train_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>outcome))</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>train_y <span class="ot">&lt;-</span> <span class="fu">factor</span>(train_data<span class="sc">$</span>outcome, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"paid off"</span>, <span class="st">"default"</span>))</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>test_x <span class="ot">&lt;-</span> <span class="fu">data.matrix</span>(test_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>outcome))</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>test_y <span class="ot">&lt;-</span> <span class="fu">factor</span>(test_data<span class="sc">$</span>outcome, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"paid off"</span>, <span class="st">"default"</span>))</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>xgb_default <span class="ot">&lt;-</span> <span class="fu">xgboost</span>(<span class="at">x =</span> train_x, <span class="at">y =</span> train_y,</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">objective =</span> <span class="st">"binary:logistic"</span>, <span class="at">nrounds =</span> <span class="dv">250</span>, <span class="at">verbosity =</span> <span class="dv">1</span>,</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">eval_metric =</span> <span class="st">"error"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] train-error:0.336646 
+[2] train-error:0.329677 
+[3] train-error:0.326031 
+[4] train-error:0.321355 
+[5] train-error:0.320032 
+[6] train-error:0.317356 
+[7] train-error:0.315915 
+[8] train-error:0.313739 
+[9] train-error:0.312445 
+[10]    train-error:0.311386 
+[11]    train-error:0.308740 
+[12]    train-error:0.306769 
+[13]    train-error:0.303946 
+[14]    train-error:0.302711 
+[15]    train-error:0.299712 
+[16]    train-error:0.298653 
+[17]    train-error:0.297065 
+[18]    train-error:0.296859 
+[19]    train-error:0.294183 
+[20]    train-error:0.293419 
+[21]    train-error:0.292801 
+[22]    train-error:0.290508 
+[23]    train-error:0.290213 
+[24]    train-error:0.288390 
+[25]    train-error:0.288008 
+[26]    train-error:0.287067 
+[27]    train-error:0.284656 
+[28]    train-error:0.283450 
+[29]    train-error:0.281597 
+[30]    train-error:0.280421 
+[31]    train-error:0.279627 
+[32]    train-error:0.278304 
+[33]    train-error:0.275745 
+[34]    train-error:0.274540 
+[35]    train-error:0.274246 
+[36]    train-error:0.273716 
+[37]    train-error:0.273099 
+[38]    train-error:0.271599 
+[39]    train-error:0.268953 
+[40]    train-error:0.267659 
+[41]    train-error:0.265659 
+[42]    train-error:0.264336 
+[43]    train-error:0.262689 
+[44]    train-error:0.260983 
+[45]    train-error:0.259013 
+[46]    train-error:0.257925 
+[47]    train-error:0.255955 
+[48]    train-error:0.255014 
+[49]    train-error:0.254573 
+[50]    train-error:0.253338 
+[51]    train-error:0.252161 
+[52]    train-error:0.251220 
+[53]    train-error:0.249574 
+[54]    train-error:0.249044 
+[55]    train-error:0.248133 
+[56]    train-error:0.246604 
+[57]    train-error:0.246162 
+[58]    train-error:0.245398 
+[59]    train-error:0.245339 
+[60]    train-error:0.243516 
+[61]    train-error:0.242751 
+[62]    train-error:0.241252 
+[63]    train-error:0.240752 
+[64]    train-error:0.239752 
+[65]    train-error:0.238193 
+[66]    train-error:0.237282 
+[67]    train-error:0.236223 
+[68]    train-error:0.234812 
+[69]    train-error:0.233518 
+[70]    train-error:0.232606 
+[71]    train-error:0.232077 
+[72]    train-error:0.230753 
+[73]    train-error:0.230048 
+[74]    train-error:0.228607 
+[75]    train-error:0.227989 
+[76]    train-error:0.227372 
+[77]    train-error:0.225695 
+[78]    train-error:0.224813 
+[79]    train-error:0.224519 
+[80]    train-error:0.223519 
+[81]    train-error:0.221461 
+[82]    train-error:0.220814 
+[83]    train-error:0.220373 
+[84]    train-error:0.218608 
+[85]    train-error:0.218138 
+[86]    train-error:0.217932 
+[87]    train-error:0.217315 
+[88]    train-error:0.216991 
+[89]    train-error:0.216050 
+[90]    train-error:0.215344 
+[91]    train-error:0.214462 
+[92]    train-error:0.213286 
+[93]    train-error:0.211580 
+[94]    train-error:0.211492 
+[95]    train-error:0.210610 
+[96]    train-error:0.210198 
+[97]    train-error:0.209463 
+[98]    train-error:0.209198 
+[99]    train-error:0.208199 
+[100]   train-error:0.207434 
+[101]   train-error:0.206581 
+[102]   train-error:0.205346 
+[103]   train-error:0.204905 
+[104]   train-error:0.204317 
+[105]   train-error:0.203052 
+[106]   train-error:0.202053 
+[107]   train-error:0.200729 
+[108]   train-error:0.199406 
+[109]   train-error:0.198553 
+[110]   train-error:0.198524 
+[111]   train-error:0.198024 
+[112]   train-error:0.197642 
+[113]   train-error:0.196877 
+[114]   train-error:0.195583 
+[115]   train-error:0.194848 
+[116]   train-error:0.194083 
+[117]   train-error:0.192260 
+[118]   train-error:0.191025 
+[119]   train-error:0.190584 
+[120]   train-error:0.190114 
+[121]   train-error:0.188761 
+[122]   train-error:0.188555 
+[123]   train-error:0.188408 
+[124]   train-error:0.187673 
+[125]   train-error:0.186320 
+[126]   train-error:0.185732 
+[127]   train-error:0.185644 
+[128]   train-error:0.185203 
+[129]   train-error:0.183821 
+[130]   train-error:0.183291 
+[131]   train-error:0.182585 
+[132]   train-error:0.181644 
+[133]   train-error:0.180645 
+[134]   train-error:0.179792 
+[135]   train-error:0.179086 
+[136]   train-error:0.178027 
+[137]   train-error:0.177116 
+[138]   train-error:0.177116 
+[139]   train-error:0.176263 
+[140]   train-error:0.176087 
+[141]   train-error:0.175234 
+[142]   train-error:0.174999 
+[143]   train-error:0.174263 
+[144]   train-error:0.173205 
+[145]   train-error:0.172470 
+[146]   train-error:0.171529 
+[147]   train-error:0.170352 
+[148]   train-error:0.169794 
+[149]   train-error:0.169235 
+[150]   train-error:0.168676 
+[151]   train-error:0.168235 
+[152]   train-error:0.167529 
+[153]   train-error:0.166471 
+[154]   train-error:0.165853 
+[155]   train-error:0.165030 
+[156]   train-error:0.164442 
+[157]   train-error:0.163559 
+[158]   train-error:0.162883 
+[159]   train-error:0.162677 
+[160]   train-error:0.162148 
+[161]   train-error:0.161883 
+[162]   train-error:0.161560 
+[163]   train-error:0.159913 
+[164]   train-error:0.158707 
+[165]   train-error:0.157560 
+[166]   train-error:0.157031 
+[167]   train-error:0.157119 
+[168]   train-error:0.156325 
+[169]   train-error:0.155737 
+[170]   train-error:0.154914 
+[171]   train-error:0.154296 
+[172]   train-error:0.153649 
+[173]   train-error:0.153061 
+[174]   train-error:0.152120 
+[175]   train-error:0.151414 
+[176]   train-error:0.150944 
+[177]   train-error:0.150179 
+[178]   train-error:0.149856 
+[179]   train-error:0.149503 
+[180]   train-error:0.149180 
+[181]   train-error:0.147327 
+[182]   train-error:0.146592 
+[183]   train-error:0.145974 
+[184]   train-error:0.145004 
+[185]   train-error:0.144416 
+[186]   train-error:0.144210 
+[187]   train-error:0.143622 
+[188]   train-error:0.143151 
+[189]   train-error:0.143239 
+[190]   train-error:0.142122 
+[191]   train-error:0.141269 
+[192]   train-error:0.140710 
+[193]   train-error:0.139740 
+[194]   train-error:0.139828 
+[195]   train-error:0.139093 
+[196]   train-error:0.138299 
+[197]   train-error:0.137093 
+[198]   train-error:0.137182 
+[199]   train-error:0.137123 
+[200]   train-error:0.137005 
+[201]   train-error:0.136799 
+[202]   train-error:0.135947 
+[203]   train-error:0.135270 
+[204]   train-error:0.133947 
+[205]   train-error:0.133241 
+[206]   train-error:0.132859 
+[207]   train-error:0.131477 
+[208]   train-error:0.130095 
+[209]   train-error:0.129948 
+[210]   train-error:0.129507 
+[211]   train-error:0.129007 
+[212]   train-error:0.128713 
+[213]   train-error:0.128213 
+[214]   train-error:0.127713 
+[215]   train-error:0.127036 
+[216]   train-error:0.126448 
+[217]   train-error:0.126272 
+[218]   train-error:0.125948 
+[219]   train-error:0.125360 
+[220]   train-error:0.125096 
+[221]   train-error:0.124302 
+[222]   train-error:0.123596 
+[223]   train-error:0.123449 
+[224]   train-error:0.122919 
+[225]   train-error:0.122008 
+[226]   train-error:0.121420 
+[227]   train-error:0.120979 
+[228]   train-error:0.120214 
+[229]   train-error:0.119744 
+[230]   train-error:0.118773 
+[231]   train-error:0.118097 
+[232]   train-error:0.117215 
+[233]   train-error:0.117038 
+[234]   train-error:0.116215 
+[235]   train-error:0.115715 
+[236]   train-error:0.115244 
+[237]   train-error:0.114597 
+[238]   train-error:0.114215 
+[239]   train-error:0.113451 
+[240]   train-error:0.112598 
+[241]   train-error:0.112333 
+[242]   train-error:0.112627 
+[243]   train-error:0.112392 
+[244]   train-error:0.112098 
+[245]   train-error:0.111304 
+[246]   train-error:0.110657 
+[247]   train-error:0.110363 
+[248]   train-error:0.110039 
+[249]   train-error:0.109392 
+[250]   train-error:0.108775 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>pred_default <span class="ot">&lt;-</span> <span class="fu">predict</span>(xgb_default, test_x)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>error_default <span class="ot">&lt;-</span> <span class="fu">abs</span>((<span class="fu">as.numeric</span>(test_y) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">-</span> pred_default) <span class="sc">&gt;</span> <span class="fl">0.5</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">attributes</span>(xgb_default)<span class="sc">$</span>evaluation_log[<span class="dv">250</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    iter train_error
+   &lt;num&gt;       &lt;num&gt;
+1:   250   0.1087749</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(error_default)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3591214</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>xgb_penalty <span class="ot">&lt;-</span> <span class="fu">xgboost</span>(<span class="at">x =</span> train_x, <span class="at">y =</span> train_y,</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">learning_rate =</span> <span class="fl">0.1</span>, <span class="at">subsample =</span> <span class="fl">0.63</span>, <span class="at">reg_lambda =</span> <span class="dv">1000</span>,</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">objective =</span> <span class="st">"binary:logistic"</span>, <span class="at">nrounds =</span> <span class="dv">250</span>, <span class="at">verbosity =</span> <span class="dv">1</span>,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">eval_metric =</span> <span class="st">"error"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] train-error:0.363730 
+[2] train-error:0.344116 
+[3] train-error:0.342969 
+[4] train-error:0.340116 
+[5] train-error:0.338646 
+[6] train-error:0.334882 
+[7] train-error:0.336411 
+[8] train-error:0.336588 
+[9] train-error:0.336911 
+[10]    train-error:0.336999 
+[11]    train-error:0.335588 
+[12]    train-error:0.337176 
+[13]    train-error:0.335794 
+[14]    train-error:0.334529 
+[15]    train-error:0.335676 
+[16]    train-error:0.334147 
+[17]    train-error:0.334323 
+[18]    train-error:0.333970 
+[19]    train-error:0.334323 
+[20]    train-error:0.334706 
+[21]    train-error:0.334118 
+[22]    train-error:0.333765 
+[23]    train-error:0.333118 
+[24]    train-error:0.332765 
+[25]    train-error:0.331294 
+[26]    train-error:0.331294 
+[27]    train-error:0.331353 
+[28]    train-error:0.331324 
+[29]    train-error:0.331236 
+[30]    train-error:0.330559 
+[31]    train-error:0.330530 
+[32]    train-error:0.329854 
+[33]    train-error:0.328971 
+[34]    train-error:0.329060 
+[35]    train-error:0.328530 
+[36]    train-error:0.329089 
+[37]    train-error:0.328471 
+[38]    train-error:0.328413 
+[39]    train-error:0.328295 
+[40]    train-error:0.328354 
+[41]    train-error:0.328030 
+[42]    train-error:0.327677 
+[43]    train-error:0.327530 
+[44]    train-error:0.326913 
+[45]    train-error:0.327178 
+[46]    train-error:0.327295 
+[47]    train-error:0.327295 
+[48]    train-error:0.326678 
+[49]    train-error:0.326413 
+[50]    train-error:0.326119 
+[51]    train-error:0.326678 
+[52]    train-error:0.326913 
+[53]    train-error:0.326442 
+[54]    train-error:0.326119 
+[55]    train-error:0.325795 
+[56]    train-error:0.326060 
+[57]    train-error:0.325884 
+[58]    train-error:0.325472 
+[59]    train-error:0.325296 
+[60]    train-error:0.325119 
+[61]    train-error:0.324943 
+[62]    train-error:0.324796 
+[63]    train-error:0.324355 
+[64]    train-error:0.324619 
+[65]    train-error:0.324472 
+[66]    train-error:0.324119 
+[67]    train-error:0.324443 
+[68]    train-error:0.324266 
+[69]    train-error:0.324119 
+[70]    train-error:0.323708 
+[71]    train-error:0.323913 
+[72]    train-error:0.323472 
+[73]    train-error:0.323855 
+[74]    train-error:0.323825 
+[75]    train-error:0.323855 
+[76]    train-error:0.324237 
+[77]    train-error:0.324031 
+[78]    train-error:0.323796 
+[79]    train-error:0.323590 
+[80]    train-error:0.323590 
+[81]    train-error:0.323561 
+[82]    train-error:0.323296 
+[83]    train-error:0.322855 
+[84]    train-error:0.323002 
+[85]    train-error:0.322825 
+[86]    train-error:0.322649 
+[87]    train-error:0.322473 
+[88]    train-error:0.322267 
+[89]    train-error:0.322561 
+[90]    train-error:0.322502 
+[91]    train-error:0.322296 
+[92]    train-error:0.321884 
+[93]    train-error:0.321826 
+[94]    train-error:0.321737 
+[95]    train-error:0.321826 
+[96]    train-error:0.321855 
+[97]    train-error:0.321679 
+[98]    train-error:0.321767 
+[99]    train-error:0.321414 
+[100]   train-error:0.321502 
+[101]   train-error:0.321561 
+[102]   train-error:0.321237 
+[103]   train-error:0.321326 
+[104]   train-error:0.321090 
+[105]   train-error:0.321032 
+[106]   train-error:0.320532 
+[107]   train-error:0.320826 
+[108]   train-error:0.321002 
+[109]   train-error:0.321179 
+[110]   train-error:0.320796 
+[111]   train-error:0.320826 
+[112]   train-error:0.320943 
+[113]   train-error:0.320796 
+[114]   train-error:0.320590 
+[115]   train-error:0.320738 
+[116]   train-error:0.320826 
+[117]   train-error:0.320355 
+[118]   train-error:0.320414 
+[119]   train-error:0.320649 
+[120]   train-error:0.320267 
+[121]   train-error:0.320385 
+[122]   train-error:0.320502 
+[123]   train-error:0.320473 
+[124]   train-error:0.320208 
+[125]   train-error:0.320355 
+[126]   train-error:0.320149 
+[127]   train-error:0.319944 
+[128]   train-error:0.319944 
+[129]   train-error:0.319973 
+[130]   train-error:0.319738 
+[131]   train-error:0.319855 
+[132]   train-error:0.319738 
+[133]   train-error:0.319649 
+[134]   train-error:0.319708 
+[135]   train-error:0.319708 
+[136]   train-error:0.319473 
+[137]   train-error:0.319208 
+[138]   train-error:0.319179 
+[139]   train-error:0.319120 
+[140]   train-error:0.319032 
+[141]   train-error:0.318797 
+[142]   train-error:0.318708 
+[143]   train-error:0.318738 
+[144]   train-error:0.319032 
+[145]   train-error:0.318620 
+[146]   train-error:0.318503 
+[147]   train-error:0.318238 
+[148]   train-error:0.318091 
+[149]   train-error:0.317973 
+[150]   train-error:0.318062 
+[151]   train-error:0.318297 
+[152]   train-error:0.318150 
+[153]   train-error:0.318297 
+[154]   train-error:0.317856 
+[155]   train-error:0.318091 
+[156]   train-error:0.317709 
+[157]   train-error:0.317620 
+[158]   train-error:0.317591 
+[159]   train-error:0.317738 
+[160]   train-error:0.317503 
+[161]   train-error:0.317562 
+[162]   train-error:0.317268 
+[163]   train-error:0.317297 
+[164]   train-error:0.317003 
+[165]   train-error:0.317003 
+[166]   train-error:0.317121 
+[167]   train-error:0.316885 
+[168]   train-error:0.316621 
+[169]   train-error:0.316621 
+[170]   train-error:0.316709 
+[171]   train-error:0.316474 
+[172]   train-error:0.316268 
+[173]   train-error:0.316385 
+[174]   train-error:0.316062 
+[175]   train-error:0.316474 
+[176]   train-error:0.316444 
+[177]   train-error:0.316179 
+[178]   train-error:0.315944 
+[179]   train-error:0.316091 
+[180]   train-error:0.316032 
+[181]   train-error:0.315768 
+[182]   train-error:0.315915 
+[183]   train-error:0.315974 
+[184]   train-error:0.316268 
+[185]   train-error:0.315621 
+[186]   train-error:0.315768 
+[187]   train-error:0.315797 
+[188]   train-error:0.315650 
+[189]   train-error:0.315474 
+[190]   train-error:0.315533 
+[191]   train-error:0.315297 
+[192]   train-error:0.315268 
+[193]   train-error:0.315033 
+[194]   train-error:0.315003 
+[195]   train-error:0.315003 
+[196]   train-error:0.315268 
+[197]   train-error:0.314915 
+[198]   train-error:0.314386 
+[199]   train-error:0.314533 
+[200]   train-error:0.314092 
+[201]   train-error:0.314121 
+[202]   train-error:0.314209 
+[203]   train-error:0.314121 
+[204]   train-error:0.314209 
+[205]   train-error:0.314033 
+[206]   train-error:0.314003 
+[207]   train-error:0.313886 
+[208]   train-error:0.313886 
+[209]   train-error:0.313768 
+[210]   train-error:0.313886 
+[211]   train-error:0.313798 
+[212]   train-error:0.313915 
+[213]   train-error:0.313356 
+[214]   train-error:0.313209 
+[215]   train-error:0.313592 
+[216]   train-error:0.313151 
+[217]   train-error:0.313445 
+[218]   train-error:0.313356 
+[219]   train-error:0.313474 
+[220]   train-error:0.313474 
+[221]   train-error:0.313356 
+[222]   train-error:0.313151 
+[223]   train-error:0.313062 
+[224]   train-error:0.312680 
+[225]   train-error:0.312886 
+[226]   train-error:0.313180 
+[227]   train-error:0.312915 
+[228]   train-error:0.312474 
+[229]   train-error:0.312504 
+[230]   train-error:0.312415 
+[231]   train-error:0.312474 
+[232]   train-error:0.312092 
+[233]   train-error:0.311592 
+[234]   train-error:0.311827 
+[235]   train-error:0.311739 
+[236]   train-error:0.311769 
+[237]   train-error:0.311798 
+[238]   train-error:0.311474 
+[239]   train-error:0.311621 
+[240]   train-error:0.311621 
+[241]   train-error:0.311416 
+[242]   train-error:0.310916 
+[243]   train-error:0.311092 
+[244]   train-error:0.311092 
+[245]   train-error:0.310769 
+[246]   train-error:0.310975 
+[247]   train-error:0.310504 
+[248]   train-error:0.310680 
+[249]   train-error:0.310181 
+[250]   train-error:0.310210 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>pred_penalty <span class="ot">&lt;-</span> <span class="fu">predict</span>(xgb_penalty, test_x)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>error_penalty <span class="ot">&lt;-</span> <span class="fu">abs</span>((<span class="fu">as.numeric</span>(test_y) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">-</span> pred_penalty) <span class="sc">&gt;</span> <span class="fl">0.5</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">attributes</span>(xgb_penalty)<span class="sc">$</span>evaluation_log[<span class="dv">250</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    iter train_error
+   &lt;num&gt;       &lt;num&gt;
+1:   250     0.31021</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(error_penalty)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3300988</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>error_default <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">249</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>error_penalty <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">249</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (ntree_limit <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">249</span>) {</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  iteration_range <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, ntree_limit <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  pred_def <span class="ot">&lt;-</span> <span class="fu">predict</span>(xgb_default, test_x, <span class="at">iteration_range =</span> iteration_range)</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  error_default[ntree_limit] <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(<span class="fu">as.numeric</span>(test_y)<span class="sc">-</span><span class="dv">1</span><span class="sc">-</span>pred_def) <span class="sc">&gt;=</span> <span class="fl">0.5</span>)</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  pred_pen <span class="ot">&lt;-</span> <span class="fu">predict</span>(xgb_penalty, test_x, <span class="at">iteration_range =</span> iteration_range)</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  error_penalty[ntree_limit] <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(<span class="fu">as.numeric</span>(test_y)<span class="sc">-</span><span class="dv">1</span><span class="sc">-</span>pred_pen) <span class="sc">&gt;=</span> <span class="fl">0.5</span>)</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>errors <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">Iterations =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">250</span>, <span class="at">Dataset =</span> <span class="st">"train"</span>, <span class="at">Penalty =</span> <span class="st">"no"</span>,</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">Error =</span> <span class="fu">attributes</span>(xgb_default)<span class="sc">$</span>evaluation_log<span class="sc">$</span>train_error),</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">Iterations =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">249</span>, <span class="at">Dataset =</span> <span class="st">"test"</span>, <span class="at">Penalty =</span> <span class="st">"no"</span>,</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Error =</span> error_default),</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">Iterations =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">250</span>, <span class="at">Dataset =</span> <span class="st">"train"</span>, <span class="at">Penalty =</span> <span class="st">"yes"</span>,</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Error =</span> <span class="fu">attributes</span>(xgb_penalty)<span class="sc">$</span>evaluation_log<span class="sc">$</span>train_error),</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">Iterations =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">249</span>, <span class="at">Dataset =</span> <span class="st">"test"</span>, <span class="at">Penalty =</span> <span class="st">"yes"</span>,</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Error =</span> error_penalty),</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(errors, <span class="fu">aes</span>(<span class="at">x =</span> Iterations, <span class="at">y =</span> Error, <span class="at">color =</span> Penalty,</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">linetype =</span> Dataset)) <span class="sc">+</span></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"black"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ch06_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">last_plot</span>()  <span class="sc">+</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="dv">165</span>, <span class="fl">0.2</span>, <span class="at">label=</span><span class="st">"Default / Training set"</span>) <span class="sc">+</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="dv">150</span>, <span class="fl">0.3</span>, <span class="at">label=</span><span class="st">"Penalty / Training set"</span>) <span class="sc">+</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="dv">220</span>, <span class="fl">0.34</span>, <span class="at">label=</span><span class="st">"Penalty / Test set"</span>) <span class="sc">+</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="dv">75</span>, <span class="fl">0.36</span>, <span class="at">label=</span><span class="st">"Default / Test set"</span>) <span class="sc">+</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ch06_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="hyperparameters-and-cross-validation" class="level4" data-number="6.1.4.3">
+<h4 data-number="6.1.4.3" class="anchored" data-anchor-id="hyperparameters-and-cross-validation"><span class="header-section-number">6.1.4.3</span> Hyperparameters and Cross-Validation</h4>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>resamples <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(loan_data, <span class="at">v =</span> <span class="dv">5</span>)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">crossing</span>(</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">tree_depth =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">12</span>),</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">learn_rate =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.5</span>, <span class="fl">0.9</span>),</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(multisession, <span class="at">workers =</span> parallel<span class="sc">::</span><span class="fu">detectCores</span>(<span class="at">logical =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>rec <span class="ot">&lt;-</span> <span class="fu">recipe</span>(outcome <span class="sc">~</span> ., <span class="at">data =</span> loan_data) <span class="sc">%&gt;%</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>())</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">boost_tree</span>(<span class="at">mode =</span> <span class="st">"classification"</span>,</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">tree_depth =</span> <span class="fu">tune</span>(), <span class="at">learn_rate =</span> <span class="fu">tune</span>())</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(model) <span class="sc">%&gt;%</span></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(rec)</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>model_cv <span class="ot">&lt;-</span> <span class="fu">tune_grid</span>(wf, resamples, <span class="at">grid =</span> grid)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">collect_metrics</span>(model_cv) <span class="sc">%&gt;%</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(.metric <span class="sc">==</span> <span class="st">"accuracy"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">error_rate =</span> <span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> mean), <span class="dv">2</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(tree_depth, learn_rate, error_rate)) <span class="sc">%&gt;%</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(error_rate)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 3
+  tree_depth learn_rate error_rate
+       &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+1          3        0.5       33.3
+2          3        0.9       33.5
+3          6        0.1       33.5
+4          6        0.5       33.8
+5          3        0.1       34.2
+6         12        0.1       34.7
+7          6        0.9       34.9
+8         12        0.5       36.4
+9         12        0.9       38.8</code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="supplementary-material" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Supplementary Material</h1>
+<section id="figure-6-2.-knn-prediction-of-loan-default-using-two-variables-debt-to-income-ratio-and-loan-payment-to-income-ratio" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="figure-6-2.-knn-prediction-of-loan-default-using-two-variables-debt-to-income-ratio-and-loan-payment-to-income-ratio"><span class="header-section-number">7.1</span> Figure 6-2. KNN prediction of loan default using two variables: debt-to-income ratio and loan-payment-to-income ratio</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> loan200 <span class="sc">%&gt;%</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">slice</span>(<span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>newloan <span class="ot">&lt;-</span> loan200 <span class="sc">%&gt;%</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">slice</span>(<span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(payment_inc_ratio, dti)</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="co"># The knn function from the class package gives us access to a list of the nearest</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a><span class="co"># neighbors and their distances via attributes "nn.index" and "nn.dist"</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>knn_pred <span class="ot">&lt;-</span> <span class="fu">knn</span>(<span class="at">train =</span> train_data[<span class="fu">c</span>(<span class="st">"payment_inc_ratio"</span>, <span class="st">"dti"</span>)], <span class="at">test =</span> newloan,</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">cl =</span> train_data<span class="sc">$</span>outcome, <span class="at">k =</span> <span class="dv">20</span>)</span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>nearest_points <span class="ot">&lt;-</span> loan200[<span class="fu">c</span>(<span class="fu">attr</span>(knn_pred, <span class="st">"nn.index"</span>) <span class="sc">+</span> <span class="dv">1</span>), ]</span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>nearest_points</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 20 × 3
+   outcome  payment_inc_ratio   dti
+   &lt;fct&gt;                &lt;dbl&gt; &lt;dbl&gt;
+ 1 default               8.66  22.2
+ 2 default               9.06  21.6
+ 3 paid off              9.45  23.3
+ 4 default               8.71  24.1
+ 5 default               9.43  24.2
+ 6 default               8.03  20.9
+ 7 default               6.92  22.5
+ 8 paid off              9.64  20.2
+ 9 paid off              7.70  24.6
+10 paid off             11.5   21.4
+11 paid off              8.65  19.8
+12 paid off             11.9   22.5
+13 paid off              9.52  19.7
+14 paid off              7.90  19.7
+15 paid off             10.2   25.5
+16 default               5.82  22  
+17 default              12.4   22.2
+18 paid off              5.62  22.4
+19 paid off              8.16  19.1
+20 default              10.0   19.1</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>dist <span class="ot">&lt;-</span> <span class="fu">attr</span>(knn_pred, <span class="st">"nn.dist"</span>)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>circle_coordinates <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">center =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="at">r =</span> <span class="dv">1</span>, <span class="at">npoints =</span> <span class="dv">100</span>) {</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  tt <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">2</span> <span class="sc">*</span> pi, <span class="at">length.out =</span> npoints <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  xx <span class="ot">&lt;-</span> center[<span class="dv">1</span>] <span class="sc">+</span> r <span class="sc">*</span> <span class="fu">cos</span>(tt)</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>  yy <span class="ot">&lt;-</span> center[<span class="dv">2</span>] <span class="sc">+</span> r <span class="sc">*</span> <span class="fu">sin</span>(tt)</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(xx, xx[<span class="dv">1</span>]), <span class="at">y =</span> <span class="fu">c</span>(yy, yy[<span class="dv">1</span>])))</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>circle_df <span class="ot">&lt;-</span> <span class="fu">circle_coordinates</span>(<span class="at">center =</span> <span class="fu">unlist</span>(newloan), <span class="at">r =</span> <span class="fu">max</span>(dist),</span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">npoints =</span> <span class="dv">201</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set first entry as target - requires adding additional level to factor</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(loan200<span class="sc">$</span>outcome) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">levels</span>(loan200<span class="sc">$</span>outcome), <span class="st">"newloan"</span>)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>loan200[<span class="dv">1</span>, <span class="st">"outcome"</span>] <span class="ot">&lt;-</span> <span class="st">"newloan"</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(loan200)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  outcome  payment_inc_ratio   dti
+  &lt;fct&gt;                &lt;dbl&gt; &lt;dbl&gt;
+1 newloan               9    22.5 
+2 default               5.47 21.3 
+3 paid off              6.90  8.97
+4 paid off             11.1   1.83
+5 default               3.72 10.8 
+6 paid off              1.90 11.3 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(nearest_points<span class="sc">$</span>outcome)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "paid off" "default" </code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> loan200, <span class="fu">aes</span>(<span class="at">x =</span> payment_inc_ratio, <span class="at">y =</span> dti, <span class="at">color =</span> outcome)) <span class="sc">+</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">shape =</span> outcome), <span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> nearest_points, <span class="fu">aes</span>(<span class="at">shape =</span> outcome), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> loan200[<span class="dv">1</span>, ], <span class="fu">aes</span>(<span class="at">shape =</span> outcome), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="dv">15</span>, <span class="dv">16</span>, <span class="dv">4</span>)) <span class="sc">+</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"paid off"</span> <span class="ot">=</span> <span class="st">"#1b9e77"</span>, <span class="st">"default"</span> <span class="ot">=</span> <span class="st">"#d95f02"</span>, <span class="st">"newloan"</span> <span class="ot">=</span> <span class="st">"black"</span>)) <span class="sc">+</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_path</span>(<span class="at">data =</span> circle_df, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y), <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">15</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">17</span>, <span class="dv">29</span>)) <span class="sc">+</span></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>graph</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ch06_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="figure-6-4.-the-first-five-rules-for-a-simple-tree-model-fit-to-the-loan-data" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="figure-6-4.-the-first-five-rules-for-a-simple-tree-model-fit-to-the-loan-data"><span class="header-section-number">7.2</span> Figure 6-4. The first five rules for a simple tree model fit to the loan data</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Figure 6-4: View of partition rules</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>r_tree <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x1 =</span> <span class="fu">c</span>(<span class="fl">0.575</span>, <span class="fl">0.375</span>, <span class="fl">0.375</span>, <span class="fl">0.375</span>, <span class="fl">0.475</span>),</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x2 =</span> <span class="fu">c</span>(<span class="fl">0.575</span>, <span class="fl">0.375</span>, <span class="fl">0.575</span>, <span class="fl">0.575</span>, <span class="fl">0.475</span>),</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y1 =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">10.42</span>, <span class="fl">4.426</span>, <span class="fl">4.426</span>),</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">y2 =</span> <span class="fu">c</span>(<span class="dv">25</span>, <span class="dv">25</span>, <span class="fl">10.42</span>, <span class="fl">4.426</span>, <span class="fl">10.42</span>),</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">rule_number =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>)))</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>r_tree <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(r_tree)</span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>rules <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">c</span>(<span class="fl">0.575</span>, <span class="fl">0.375</span>, <span class="fl">0.4</span>, <span class="fl">0.4</span>, <span class="fl">0.475</span>),</span>
+<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">24</span>, <span class="dv">24</span>, <span class="fl">10.42</span>, <span class="fl">4.426</span>, <span class="fl">9.42</span>),</span>
+<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">rule_number =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>))</span>
+<span id="cb52-14"><a href="#cb52-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb52-15"><a href="#cb52-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-16"><a href="#cb52-16" aria-hidden="true" tabindex="-1"></a>labs <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb52-17"><a href="#cb52-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">c</span>(</span>
+<span id="cb52-18"><a href="#cb52-18" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.575</span> <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.575</span>) <span class="sc">/</span> <span class="dv">2</span>,</span>
+<span id="cb52-19"><a href="#cb52-19" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.375</span> <span class="sc">/</span> <span class="dv">2</span>,</span>
+<span id="cb52-20"><a href="#cb52-20" aria-hidden="true" tabindex="-1"></a>    (<span class="fl">0.375</span> <span class="sc">+</span> <span class="fl">0.575</span>) <span class="sc">/</span> <span class="dv">2</span>,</span>
+<span id="cb52-21"><a href="#cb52-21" aria-hidden="true" tabindex="-1"></a>    (<span class="fl">0.375</span> <span class="sc">+</span> <span class="fl">0.575</span>) <span class="sc">/</span> <span class="dv">2</span>,</span>
+<span id="cb52-22"><a href="#cb52-22" aria-hidden="true" tabindex="-1"></a>    (<span class="fl">0.475</span> <span class="sc">+</span> <span class="fl">0.575</span>) <span class="sc">/</span> <span class="dv">2</span>,</span>
+<span id="cb52-23"><a href="#cb52-23" aria-hidden="true" tabindex="-1"></a>    (<span class="fl">0.375</span> <span class="sc">+</span> <span class="fl">0.475</span>) <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb52-24"><a href="#cb52-24" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb52-25"><a href="#cb52-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">c</span>(</span>
+<span id="cb52-26"><a href="#cb52-26" aria-hidden="true" tabindex="-1"></a>    <span class="fl">12.5</span>,</span>
+<span id="cb52-27"><a href="#cb52-27" aria-hidden="true" tabindex="-1"></a>    <span class="fl">12.5</span>,</span>
+<span id="cb52-28"><a href="#cb52-28" aria-hidden="true" tabindex="-1"></a>    <span class="fl">10.42</span> <span class="sc">+</span> (<span class="dv">25</span> <span class="sc">-</span> <span class="fl">10.42</span>) <span class="sc">/</span> <span class="dv">2</span>,</span>
+<span id="cb52-29"><a href="#cb52-29" aria-hidden="true" tabindex="-1"></a>    <span class="fl">4.426</span> <span class="sc">/</span> <span class="dv">2</span>,</span>
+<span id="cb52-30"><a href="#cb52-30" aria-hidden="true" tabindex="-1"></a>    <span class="fl">4.426</span> <span class="sc">+</span> (<span class="fl">10.42</span> <span class="sc">-</span> <span class="fl">4.426</span>) <span class="sc">/</span> <span class="dv">2</span>,</span>
+<span id="cb52-31"><a href="#cb52-31" aria-hidden="true" tabindex="-1"></a>    <span class="fl">4.426</span> <span class="sc">+</span> (<span class="fl">10.42</span> <span class="sc">-</span> <span class="fl">4.426</span>) <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb52-32"><a href="#cb52-32" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb52-33"><a href="#cb52-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">decision =</span> <span class="fu">factor</span>(<span class="fu">c</span>(</span>
+<span id="cb52-34"><a href="#cb52-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">"paid off"</span>,</span>
+<span id="cb52-35"><a href="#cb52-35" aria-hidden="true" tabindex="-1"></a>    <span class="st">"default"</span>,</span>
+<span id="cb52-36"><a href="#cb52-36" aria-hidden="true" tabindex="-1"></a>    <span class="st">"default"</span>,</span>
+<span id="cb52-37"><a href="#cb52-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">"paid off"</span>,</span>
+<span id="cb52-38"><a href="#cb52-38" aria-hidden="true" tabindex="-1"></a>    <span class="st">"paid off"</span>,</span>
+<span id="cb52-39"><a href="#cb52-39" aria-hidden="true" tabindex="-1"></a>    <span class="st">"default"</span></span>
+<span id="cb52-40"><a href="#cb52-40" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb52-41"><a href="#cb52-41" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>shift <span class="ot">&lt;-</span> <span class="fl">0.004</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>shift <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> loan3000 <span class="sc">%&gt;%</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#  mutate(borrower_score = ifelse(outcome == "paid off", borrower_score + shift, borrower_score - shift)) %&gt;%</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">borrower_score =</span> borrower_score <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">dim</span>(loan3000)[<span class="dv">1</span>], <span class="at">sd =</span> <span class="dv">2</span> <span class="sc">*</span> shift)</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> borrower_score, <span class="at">y =</span> payment_inc_ratio)) <span class="sc">+</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> outcome, <span class="at">size =</span> outcome, <span class="at">shape =</span> outcome), <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># scale_color_manual(values = c("paid off" = "#7fbc41", "default" = "#d95f02")) +</span></span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"paid off"</span> <span class="ot">=</span> <span class="dv">0</span>, <span class="st">"default"</span> <span class="ot">=</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_size_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"paid off"</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">"default"</span> <span class="ot">=</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="at">data =</span> r_tree, <span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> y1, <span class="at">xend =</span> x2, <span class="at">yend =</span> y2), <span class="at">linewidth =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">linewidth =</span> <span class="fl">1.5</span>)),</span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">linetype =</span> <span class="fu">guide_legend</span>(<span class="at">keywidth =</span> <span class="dv">3</span>, <span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">linewidth =</span> <span class="dv">1</span>))) <span class="sc">+</span></span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">25</span>)) <span class="sc">+</span></span>
+<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_label</span>(<span class="at">data =</span> labs, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">label =</span> decision)) <span class="sc">+</span></span>
+<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_label</span>(<span class="at">data =</span> rules, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">label =</span> rule_number),</span>
+<span id="cb53-21"><a href="#cb53-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> <span class="fl">2.5</span>, <span class="at">fill =</span> <span class="st">"#eeeeee"</span>,</span>
+<span id="cb53-22"><a href="#cb53-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.r =</span> <span class="fu">unit</span>(<span class="dv">0</span>, <span class="st">"lines"</span>), <span class="at">label.padding =</span> <span class="fu">unit</span>(<span class="fl">0.2</span>, <span class="st">"lines"</span>)) <span class="sc">+</span></span>
+<span id="cb53-23"><a href="#cb53-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">2</span>))) <span class="sc">+</span></span>
+<span id="cb53-24"><a href="#cb53-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_density_2d</span>(<span class="fu">aes</span>(<span class="at">linetype =</span> outcome, <span class="at">color =</span> outcome),  </span>
+<span id="cb53-25"><a href="#cb53-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># variation geom = "polygon",</span></span>
+<span id="cb53-26"><a href="#cb53-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># variation aes(alpha = 0.1 * ..level.., fill = outcome),</span></span>
+<span id="cb53-27"><a href="#cb53-27" aria-hidden="true" tabindex="-1"></a>                    <span class="at">bins =</span> <span class="dv">6</span>)  <span class="sc">+</span></span>
+<span id="cb53-28"><a href="#cb53-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span>
+<span id="cb53-29"><a href="#cb53-29" aria-hidden="true" tabindex="-1"></a>graph</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ch06_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> loan3000, <span class="fu">aes</span>(<span class="at">x =</span> borrower_score, <span class="at">y =</span> payment_inc_ratio)) <span class="sc">+</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> outcome, <span class="at">shape =</span> outcome, <span class="at">size =</span> outcome), <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"paid off"</span> <span class="ot">=</span> <span class="st">"#7fbc41"</span>, <span class="st">"default"</span> <span class="ot">=</span> <span class="st">"#d95f02"</span>)) <span class="sc">+</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"paid off"</span> <span class="ot">=</span> <span class="dv">0</span>, <span class="st">"default"</span> <span class="ot">=</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"paid off"</span> <span class="ot">=</span> <span class="fl">0.5</span>, <span class="st">"default"</span> <span class="ot">=</span> <span class="dv">2</span>)) <span class="sc">+</span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">data =</span> r_tree, <span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> y1, <span class="at">xend =</span> x2, <span class="at">yend =</span> y2), <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="fl">1.5</span>)),</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">linetype =</span> <span class="fu">guide_legend</span>(<span class="at">keywidth =</span> <span class="dv">3</span>, <span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">1</span>))) <span class="sc">+</span></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">25</span>)) <span class="sc">+</span></span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(<span class="at">data =</span> labs, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">label =</span> decision)) <span class="sc">+</span></span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(<span class="at">data =</span> rules, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">label =</span> rule_number),</span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">2.5</span>, <span class="at">fill =</span> <span class="st">"#eeeeee"</span>,</span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.r =</span> <span class="fu">unit</span>(<span class="dv">0</span>, <span class="st">"lines"</span>), <span class="at">label.padding =</span> <span class="fu">unit</span>(<span class="fl">0.2</span>, <span class="st">"lines"</span>)) <span class="sc">+</span></span>
+<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">2</span>))) <span class="sc">+</span></span>
+<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>graph</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ch06_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="figure-6-5.-gini-impurity-and-entropy-measures" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="figure-6-5.-gini-impurity-and-entropy-measures"><span class="header-section-number">7.3</span> Figure 6-5. Gini impurity and entropy measures</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>info <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  info <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(x <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, <span class="sc">-</span>x <span class="sc">*</span> <span class="fu">log2</span>(x) <span class="sc">-</span> (<span class="dv">1</span> <span class="sc">-</span> x) <span class="sc">*</span> <span class="fu">log2</span>(<span class="dv">1</span> <span class="sc">-</span> x))</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(info)</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>gini <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> x))</span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">50</span> <span class="sc">/</span> <span class="dv">100</span></span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>impure <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">p =</span> x, <span class="at">impurity =</span> <span class="dv">2</span> <span class="sc">*</span> x, <span class="at">type =</span> <span class="st">"Accuracy"</span>),</span>
+<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">p =</span> x, <span class="at">impurity =</span> <span class="fu">gini</span>(x) <span class="sc">/</span> <span class="fu">gini</span>(<span class="fl">0.5</span>) <span class="sc">*</span> <span class="fu">info</span>(<span class="fl">0.5</span>), <span class="at">type =</span> <span class="st">"Gini"</span>),</span>
+<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">p =</span> x, <span class="at">impurity =</span> <span class="fu">info</span>(x), <span class="at">type =</span> <span class="st">"Entropy"</span>)</span>
+<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb57-16"><a href="#cb57-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-17"><a href="#cb57-17" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> impure, <span class="fu">aes</span>(<span class="at">x =</span> p, <span class="at">y =</span> impurity, <span class="at">linetype =</span> type, <span class="at">color =</span> type)) <span class="sc">+</span></span>
+<span id="cb57-18"><a href="#cb57-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb57-19"><a href="#cb57-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">linetype =</span> <span class="fu">guide_legend</span>(<span class="at">keywidth =</span> <span class="dv">3</span>, <span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">1</span>))) <span class="sc">+</span></span>
+<span id="cb57-20"><a href="#cb57-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.01</span>)) <span class="sc">+</span></span>
+<span id="cb57-21"><a href="#cb57-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.01</span>)) <span class="sc">+</span></span>
+<span id="cb57-22"><a href="#cb57-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb57-23"><a href="#cb57-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.title =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb57-24"><a href="#cb57-24" aria-hidden="true" tabindex="-1"></a>graph</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ch06_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./ch05.html" class="pagination-link" aria-label="Chapter 5: Classification">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Chapter 5: Classification</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./ch07.html" class="pagination-link" aria-label="Chapter 7: Unsupervised Learning">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Chapter 7: Unsupervised Learning</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

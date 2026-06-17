@@ -131,3 +131,11 @@ dmypy.json
 .Trash-0
 .Rproj.user
 .Rhistory
+.Renviron
+**/*_files/
+**/*_cache/
+**/_book/
+*.rmarkdown
+code/**/site_libs/
+code/**/ch*.html
+docs/**/site_libs/

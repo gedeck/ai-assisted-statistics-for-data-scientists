@@ -1,0 +1,452 @@
+---
+title: "Chapter 6: Statistical Machine Learning"
+format: html
+---
+```{r setup}
+#| include: FALSE
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, autodep = TRUE, fig.align = "center")
+```
+```{r paged.print=FALSE}
+#| cache: FALSE
+#| message: FALSE
+#| warning: FALSE
+library(future)
+library(patchwork)
+library(ranger)
+library(rpart.plot)
+library(tidymodels)
+library(tidyverse)
+library(xgboost)
+
+set.seed(123)
+
+# Location of the data files. Adjust this path if you keep the data
+# files in a different directory.
+DATA_DIR <- '../../data'
+
+```
+## Statistical Machine Learning
+### K-Nearest Neighbors
+#### A Small Example: Predicting Loan Default
+```{r paged.print=FALSE}
+loan200 <- read_csv(file.path(DATA_DIR, "loan200.csv"), show_col_types = FALSE) %>%
+  mutate(outcome = factor(outcome, levels = c("paid off", "default")))
+
+train_data <- loan200 %>% dplyr::slice(-1)
+newloan <- loan200 %>% dplyr::slice(1)
+model <- nearest_neighbor(mode = "classification", neighbors = 20,
+  weight_func = "rectangular")
+knn_model <- workflow() %>%
+  add_model(model) %>%
+  add_formula(outcome ~ payment_inc_ratio + dti) %>%
+  fit(train_data)
+
+knn_pred <- knn_model %>% predict(newloan)
+knn_pred
+```
+#### Standardization (Normalization, z-Scores)
+```{r paged.print=FALSE}
+newloan
+```
+```{r paged.print=FALSE}
+#| cache: FALSE
+library(FNN)
+loan_data <- read_csv(file.path(DATA_DIR, "loan_data.csv.gz"), show_col_types = FALSE) %>%
+  select(-c(index, status)) %>%
+  mutate(
+    across(where(is.character), as.factor),
+    outcome = factor(outcome, levels = c("paid off", "default"))
+  )
+
+loan_df <- model.matrix(~ -1 + payment_inc_ratio + dti + revol_bal +
+    revol_util, data = loan_data)
+newloan <- loan_df[1, , drop = FALSE]
+loan_df <- loan_df[-1, ]
+outcome <- loan_data[-1, ]$outcome
+knn_pred <- knn(train = loan_df, test = newloan, cl = outcome, k = 5)
+loan_df[attr(knn_pred, "nn.index"), ]
+```
+```{r paged.print=FALSE}
+loan_df <- model.matrix(~ -1 + payment_inc_ratio + dti + revol_bal +
+    revol_util, data = loan_data)
+loan_std <- scale(loan_df)
+newloan_std <- loan_std[1, , drop = FALSE]
+loan_std <- loan_std[-1, ]
+loan_df <- loan_df[-1, ]
+outcome <- loan_data[-1, ]$outcome
+knn_pred <- knn(train = loan_std, test = newloan_std, cl = outcome, k = 5)
+loan_df[attr(knn_pred, "nn.index"), ]
+```
+#### KNN as a Feature Engine
+```{r paged.print=FALSE}
+rec <- recipe(outcome ~ dti + revol_bal + revol_util + open_acc +
+    delinq_2yrs_zero + pub_rec_zero, data = loan_data)
+model <- nearest_neighbor(mode = "classification", neighbors = 20,
+  weight_func = "rectangular")
+borrow_knn <- workflow() %>%
+  add_model(nearest_neighbor(mode = "classification", neighbors = 20)) %>%
+  add_recipe(rec) %>%
+  fit(loan_data)
+borrow_feature <- borrow_knn %>%
+  predict(loan_data, type = "prob") %>%
+  pluck(".pred_default")
+summary(borrow_feature)
+```
+### Tree Models
+#### A Simple Example
+```{r paged.print=FALSE}
+loan3000 <- read_csv(file.path(DATA_DIR, "loan3000.csv"), show_col_types = FALSE) %>%
+  mutate(outcome = factor(outcome, levels = c("paid off", "default")))
+
+loan_tree <- decision_tree(mode = "classification", engine = "rpart") %>%
+  fit(outcome ~ borrower_score + payment_inc_ratio, data = loan3000)
+
+rpart.plot(loan_tree %>% extract_fit_engine(), roundint = FALSE)
+```
+```{r paged.print=FALSE}
+loan_tree
+```
+### Bagging and the Random Forest
+#### Random Forest
+```{r paged.print=FALSE}
+rf <- rand_forest(mode = "classification") %>%
+  set_engine("ranger", seed = 123) %>%
+  fit(outcome ~ borrower_score + payment_inc_ratio, data = loan3000)
+rf
+```
+```{r paged.print=FALSE}
+num_trees <- c(1, seq(5, 500, 5))
+oob_scores <- c()
+for (trees in num_trees) {
+  rf <- rand_forest(mode = "classification", trees = trees) %>%
+    set_engine("ranger", seed = 123) %>%
+    fit(outcome ~ borrower_score + payment_inc_ratio, data = loan3000)
+  oob_scores <- c(oob_scores, (rf %>% extract_fit_engine())$prediction.error)
+}
+error_df <- tibble(error_rate = oob_scores, num_trees = num_trees)
+ggplot(error_df, aes(x = num_trees, y = error_rate)) +
+  geom_line()
+```
+```{r paged.print=FALSE}
+rf_df <- augment(rf, loan3000)
+ggplot(data = rf_df, aes(x = borrower_score, y = payment_inc_ratio,
+    shape = .pred_class, color = .pred_class, size = .pred_class)) +
+  geom_jitter(alpha = 0.8, height = 0, width = 0.003) +
+  scale_color_manual(values = c("paid off" = "#b8e186", "default" = "#d95f02")) +
+  scale_shape_manual(values = c("paid off" = 0, "default" = 1)) +
+  scale_size_manual(values = c("paid off" = 0.5, "default" = 2))
+```
+#### Variable Importance
+```{r paged.print=FALSE}
+rf_all <- rand_forest(mode = "classification") %>%
+  set_engine("ranger", seed = 123, importance = "impurity") %>%
+  fit(outcome ~ ., data = loan_data)
+rf_all
+```
+```{r paged.print=FALSE}
+rf_permutation <- rand_forest(mode = "classification") %>%
+  set_engine("ranger", seed = 123, importance = "permutation") %>%
+  fit(outcome ~ ., data = loan_data)
+```
+```{r paged.print=FALSE}
+varimp_gini <- importance(rf_all %>% extract_fit_engine())
+varimp_perm <- importance(rf_permutation %>% extract_fit_engine())
+df <- tibble(
+  predictor = names(varimp_gini),
+  impurity = varimp_gini,
+  permutation = varimp_perm
+)
+g1 <- ggplot(df, aes(x = permutation, y = reorder(predictor, permutation))) +
+  geom_point() +
+  labs(y = "Importance", title = "Accuracy Decrease")
+g2 <- ggplot(df, aes(x = impurity, y = reorder(predictor, permutation))) +
+  geom_point() +
+  labs(y = "Importance", title = "Gini Decrease")
+(g1 + theme_bw()) / (g2 + theme_bw())
+```
+### Boosting
+#### XGBoost
+```{r paged.print=FALSE}
+xgb <- boost_tree(mode = "classification",
+  trees = 100, learn_rate = 0.1, sample_size = 0.63) %>%
+  fit(outcome ~ borrower_score + payment_inc_ratio, data = loan3000)
+```
+```{r paged.print=FALSE}
+xgb_df <- augment(xgb, loan3000)
+ggplot(data = xgb_df, aes(x = borrower_score, y = payment_inc_ratio,
+    color = .pred_class, shape = .pred_class, size = .pred_class)) +
+  geom_jitter(alpha = 0.8, height = 0, width = 0.003) +
+  scale_color_manual(values = c("paid off" = "#b8e186", "default" = "#d95f02")) +
+  scale_shape_manual(values = c("paid off" = 0, "default" = 1)) +
+  scale_size_manual(values = c("paid off" = 0.5, "default" = 2))
+```
+#### Regularization: Avoiding Overfitting
+```{r paged.print=FALSE}
+set.seed(400820)
+loan_split <- initial_split(loan_data, prop = 0.75)
+train_data <- training(loan_split)
+test_data <- testing(loan_split)
+train_x <- data.matrix(train_data %>% select(-outcome))
+train_y <- factor(train_data$outcome, levels = c("paid off", "default"))
+test_x <- data.matrix(test_data %>% select(-outcome))
+test_y <- factor(test_data$outcome, levels = c("paid off", "default"))
+
+xgb_default <- xgboost(x = train_x, y = train_y,
+  objective = "binary:logistic", nrounds = 250, verbosity = 1,
+  eval_metric = "error")
+
+pred_default <- predict(xgb_default, test_x)
+error_default <- abs((as.numeric(test_y) - 1) - pred_default) > 0.5
+attributes(xgb_default)$evaluation_log[250, ]
+mean(error_default)
+```
+```{r paged.print=FALSE}
+xgb_penalty <- xgboost(x = train_x, y = train_y,
+  learning_rate = 0.1, subsample = 0.63, reg_lambda = 1000,
+  objective = "binary:logistic", nrounds = 250, verbosity = 1,
+  eval_metric = "error")
+pred_penalty <- predict(xgb_penalty, test_x)
+error_penalty <- abs((as.numeric(test_y) - 1) - pred_penalty) > 0.5
+attributes(xgb_penalty)$evaluation_log[250, ]
+mean(error_penalty)
+```
+```{r paged.print=FALSE}
+error_default <- rep(0, 249)
+error_penalty <- rep(0, 249)
+for (ntree_limit in 1:249) {
+  iteration_range <- c(1, ntree_limit + 1)
+  pred_def <- predict(xgb_default, test_x, iteration_range = iteration_range)
+  error_default[ntree_limit] <- mean(abs(as.numeric(test_y)-1-pred_def) >= 0.5)
+  pred_pen <- predict(xgb_penalty, test_x, iteration_range = iteration_range)
+  error_penalty[ntree_limit] <- mean(abs(as.numeric(test_y)-1-pred_pen) >= 0.5)
+}
+```
+```{r paged.print=FALSE}
+#| cache: FALSE
+errors <- bind_rows(
+  tibble(Iterations = 1:250, Dataset = "train", Penalty = "no",
+    Error = attributes(xgb_default)$evaluation_log$train_error),
+  tibble(Iterations = 1:249, Dataset = "test", Penalty = "no",
+    Error = error_default),
+  tibble(Iterations = 1:250, Dataset = "train", Penalty = "yes",
+    Error = attributes(xgb_penalty)$evaluation_log$train_error),
+  tibble(Iterations = 1:249, Dataset = "test", Penalty = "yes",
+    Error = error_penalty),
+)
+ggplot(errors, aes(x = Iterations, y = Error, color = Penalty,
+    linetype = Dataset)) +
+  geom_line() +
+  scale_color_manual(values = c("red", "black"))
+```
+```{r paged.print=FALSE}
+#| cache: FALSE
+last_plot()  +
+  theme_bw() +
+  annotate("text", 165, 0.2, label="Default / Training set") +
+  annotate("text", 150, 0.3, label="Penalty / Training set") +
+  annotate("text", 220, 0.34, label="Penalty / Test set") +
+  annotate("text", 75, 0.36, label="Default / Test set") +
+  theme(legend.position = "none")
+```
+```{r paged.print=FALSE}
+#| cache: FALSE
+```
+#### Hyperparameters and Cross-Validation
+```{r paged.print=FALSE}
+set.seed(1234)
+resamples <- vfold_cv(loan_data, v = 5)
+grid <- crossing(
+  tree_depth = c(3, 6, 12),
+  learn_rate = c(0.1, 0.5, 0.9),
+)
+```
+```{r paged.print=FALSE}
+plan(multisession, workers = parallel::detectCores(logical = FALSE))
+
+rec <- recipe(outcome ~ ., data = loan_data) %>%
+  step_dummy(all_nominal_predictors())
+model <- boost_tree(mode = "classification",
+  tree_depth = tune(), learn_rate = tune())
+
+wf <- workflow() %>%
+  add_model(model) %>%
+  add_recipe(rec)
+
+model_cv <- tune_grid(wf, resamples, grid = grid)
+```
+```{r paged.print=FALSE}
+collect_metrics(model_cv) %>%
+  filter(.metric == "accuracy") %>%
+  mutate(error_rate = round(100 * (1 - mean), 2)) %>%
+  select(c(tree_depth, learn_rate, error_rate)) %>%
+  arrange(error_rate)
+```
+# Supplementary Material
+## Figure 6-2. KNN prediction of loan default using two variables: debt-to-income ratio and loan-payment-to-income ratio
+```{r paged.print=FALSE}
+train_data <- loan200 %>%
+  dplyr::slice(-1)
+newloan <- loan200 %>%
+  dplyr::slice(1) %>%
+  select(payment_inc_ratio, dti)
+
+# The knn function from the class package gives us access to a list of the nearest
+# neighbors and their distances via attributes "nn.index" and "nn.dist"
+knn_pred <- knn(train = train_data[c("payment_inc_ratio", "dti")], test = newloan,
+  cl = train_data$outcome, k = 20)
+
+nearest_points <- loan200[c(attr(knn_pred, "nn.index") + 1), ]
+nearest_points
+dist <- attr(knn_pred, "nn.dist")
+
+circle_coordinates <- function(center = c(0, 0), r = 1, npoints = 100) {
+  tt <- seq(0, 2 * pi, length.out = npoints - 1)
+  xx <- center[1] + r * cos(tt)
+  yy <- center[2] + r * sin(tt)
+  return(data.frame(x = c(xx, xx[1]), y = c(yy, yy[1])))
+}
+
+circle_df <- circle_coordinates(center = unlist(newloan), r = max(dist),
+  npoints = 201)
+```
+```{r paged.print=FALSE}
+# set first entry as target - requires adding additional level to factor
+levels(loan200$outcome) <- c(levels(loan200$outcome), "newloan")
+loan200[1, "outcome"] <- "newloan"
+head(loan200)
+levels(nearest_points$outcome)
+```
+```{r paged.print=FALSE}
+graph <- ggplot(data = loan200, aes(x = payment_inc_ratio, y = dti, color = outcome)) +
+  geom_point(aes(shape = outcome), size = 2, alpha = 0.4) +
+  geom_point(data = nearest_points, aes(shape = outcome), size = 2) +
+  geom_point(data = loan200[1, ], aes(shape = outcome), size = 2) +
+  scale_shape_manual(values = c(15, 16, 4)) +
+  scale_color_manual(values = c("paid off" = "#1b9e77", "default" = "#d95f02", "newloan" = "black")) +
+  geom_path(data = circle_df, aes(x = x, y = y), color = "black") +
+  coord_cartesian(xlim = c(3, 15), ylim = c(17, 29)) +
+  theme_bw()
+graph
+```
+## Figure 6-4. The first five rules for a simple tree model fit to the loan data
+```{r paged.print=FALSE}
+## Figure 6-4: View of partition rules
+r_tree <- tibble(
+  x1 = c(0.575, 0.375, 0.375, 0.375, 0.475),
+  x2 = c(0.575, 0.375, 0.575, 0.575, 0.475),
+  y1 = c(0, 0, 10.42, 4.426, 4.426),
+  y2 = c(25, 25, 10.42, 4.426, 10.42),
+  rule_number = factor(c(1, 2, 3, 4, 5)))
+r_tree <- as.data.frame(r_tree)
+
+rules <- tibble(
+  x = c(0.575, 0.375, 0.4, 0.4, 0.475),
+  y = c(24, 24, 10.42, 4.426, 9.42),
+  rule_number = factor(c(1, 2, 3, 4, 5))
+)
+
+labs <- tibble(
+  x = c(
+    0.575 + (1 - 0.575) / 2,
+    0.375 / 2,
+    (0.375 + 0.575) / 2,
+    (0.375 + 0.575) / 2,
+    (0.475 + 0.575) / 2,
+    (0.375 + 0.475) / 2
+  ),
+  y = c(
+    12.5,
+    12.5,
+    10.42 + (25 - 10.42) / 2,
+    4.426 / 2,
+    4.426 + (10.42 - 4.426) / 2,
+    4.426 + (10.42 - 4.426) / 2
+  ),
+  decision = factor(c(
+    "paid off",
+    "default",
+    "default",
+    "paid off",
+    "paid off",
+    "default"
+  ))
+)
+```
+```{r paged.print=FALSE}
+shift <- 0.004
+shift <- 0
+graph <- loan3000 %>%
+  #  mutate(borrower_score = ifelse(outcome == "paid off", borrower_score + shift, borrower_score - shift)) %>%
+  mutate(
+    borrower_score = borrower_score + rnorm(dim(loan3000)[1], sd = 2 * shift)
+  ) %>%
+  ggplot(aes(x = borrower_score, y = payment_inc_ratio)) +
+    geom_point(aes(color = outcome, size = outcome, shape = outcome), alpha = 0.5) +
+    # scale_color_manual(values = c("paid off" = "#7fbc41", "default" = "#d95f02")) +
+    scale_shape_manual(values = c("paid off" = 0, "default" = 1)) +
+    scale_size_manual(values = c("paid off" = 1, "default" = 1)) +
+    geom_segment(data = r_tree, aes(x = x1, y = y1, xend = x2, yend = y2), linewidth = 1.5) +
+    guides(color = guide_legend(override.aes = list(linewidth = 1.5)),
+      linetype = guide_legend(keywidth = 3, override.aes = list(linewidth = 1))) +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
+    coord_cartesian(ylim = c(0, 25)) +
+    geom_label(data = labs, aes(x = x, y = y, label = decision)) +
+    geom_label(data = rules, aes(x = x, y = y, label = rule_number),
+      size = 2.5, fill = "#eeeeee",
+      label.r = unit(0, "lines"), label.padding = unit(0.2, "lines")) +
+    guides(color = guide_legend(override.aes = list(size = 2))) +
+    stat_density_2d(aes(linetype = outcome, color = outcome),  
+    # variation geom = "polygon",
+    # variation aes(alpha = 0.1 * ..level.., fill = outcome),
+                    bins = 6)  +
+    theme_bw()
+graph
+```
+```{r paged.print=FALSE}
+graph <- ggplot(data = loan3000, aes(x = borrower_score, y = payment_inc_ratio)) +
+  geom_point(aes(color = outcome, shape = outcome, size = outcome), alpha = 0.8) +
+  scale_color_manual(values = c("paid off" = "#7fbc41", "default" = "#d95f02")) +
+  scale_shape_manual(values = c("paid off" = 0, "default" = 1)) +
+  scale_size_manual(values = c("paid off" = 0.5, "default" = 2)) +
+  geom_segment(data = r_tree, aes(x = x1, y = y1, xend = x2, yend = y2), size = 1.5) +
+  guides(color = guide_legend(override.aes = list(size = 1.5)),
+    linetype = guide_legend(keywidth = 3, override.aes = list(size = 1))) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  coord_cartesian(ylim = c(0, 25)) +
+  geom_label(data = labs, aes(x = x, y = y, label = decision)) +
+  geom_label(data = rules, aes(x = x, y = y, label = rule_number),
+    size = 2.5, fill = "#eeeeee",
+    label.r = unit(0, "lines"), label.padding = unit(0.2, "lines")) +
+  guides(color = guide_legend(override.aes = list(size = 2))) +
+  theme_bw()
+graph
+```
+## Figure 6-5. Gini impurity and entropy measures
+```{r paged.print=FALSE}
+info <- function(x) {
+  info <- ifelse(x == 0, 0, -x * log2(x) - (1 - x) * log2(1 - x))
+  return(info)
+}
+
+gini <- function(x) {
+  return(x * (1 - x))
+}
+
+x <- 0:50 / 100
+impure <- bind_rows(
+  tibble(p = x, impurity = 2 * x, type = "Accuracy"),
+  tibble(p = x, impurity = gini(x) / gini(0.5) * info(0.5), type = "Gini"),
+  tibble(p = x, impurity = info(x), type = "Entropy")
+)
+
+graph <- ggplot(data = impure, aes(x = p, y = impurity, linetype = type, color = type)) +
+  geom_line(size = 1.5) +
+  guides(linetype = guide_legend(keywidth = 3, override.aes = list(size = 1))) +
+  scale_x_continuous(expand = c(0, 0.01)) +
+  scale_y_continuous(expand = c(0, 0.01)) +
+  theme_bw() +
+  theme(legend.title = element_blank())
+graph
+```

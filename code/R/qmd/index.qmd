@@ -1,0 +1,14 @@
+# Preface {.unnumbered}
+
+This collects the **R** code examples from *AI-Assisted Statistics for Data Scientists*
+by Peter Bruce, Andrew Bruce, Peter Gedeck, one chapter per page.
+
+The data files live in a shared `data` directory. Each chapter loads them
+through the `DATA_DIR` variable defined at the top of the chapter; change that
+path if you keep the data elsewhere.
+
+Render the whole book into a single document with:
+
+```bash
+quarto render
+```

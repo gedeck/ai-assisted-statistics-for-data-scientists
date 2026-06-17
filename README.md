@@ -8,7 +8,7 @@ Code repository for O'Reilly book
 # Code repository
 <table width='100%'>
  <tr>
-  <td><img src='images/OReilly-3e-english.png' width=300></td>
+  <td><img src='images/OReilly-3e-english.webp' width=300></td>
   <td>
    <p><b>AI-Assisted Statistics for Data Scientists:</b></p>
 
