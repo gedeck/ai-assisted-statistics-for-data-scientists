@@ -24,6 +24,16 @@ by Peter Bruce, Andrew Bruce, and <a href="https://www.amazon.com/Peter-Gedeck/e
    </ul>
     </td>
   </tr>
+  <tr>
+    <td><img src='images/SPD-english.png' width=200></td>
+    <td>English (Indian subcontinent &amp; select countries only):<br>
+     AI-Assisted Statistics for Data Scientists: 50+ Essential Concepts Using R And Python, Third Edition<br>
+     2021: ISBN 978-9-368-08069-5, Shroff Publishers and Distributors Pvt. Ltd.
+     <br>
+     <!-- <a href='https://www.google.com/books/edition/'>Google books</a>, -->
+     <a href='https://www.shroffpublishers.com/books/9789368080695/'>Order here</a>
+    </td>
+  </tr>
 </table>
 
 # Table of Content
