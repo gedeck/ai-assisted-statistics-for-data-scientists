@@ -24,16 +24,6 @@ by Peter Bruce, Andrew Bruce, and <a href="https://www.amazon.com/Peter-Gedeck/e
    </ul>
     </td>
   </tr>
-  <tr>
-    <td><img src='images/SPD-english.png' width=200></td>
-    <td>English (Indian subcontinent &amp; select countries only):<br>
-     AI-Assisted Statistics for Data Scientists: 50+ Essential Concepts Using R And Python, Third Edition<br>
-     2021: ISBN 978-9-368-08069-5, Shroff Publishers and Distributors Pvt. Ltd.
-     <br>
-     <!-- <a href='https://www.google.com/books/edition/'>Google books</a>, -->
-     <a href='https://www.shroffpublishers.com/books/9789368080695/'>Order here</a>
-    </td>
-  </tr>
 </table>
 
 # Table of Content
@@ -66,19 +56,21 @@ Download the data and source code as ZIP archives:
 - [R.zip](code/R.zip) — the R source code
 
 
-<!-- 
-## Other language versions
+# Other language versions
 <table>
   <tr>
-    <td><img src='images/OReilly-english.jpg' width=200></td>
-    <td><b>English:</b><br>
-     Practical Statistics for Data Scientists: 50+ Essential Concepts Using R and Python<br>
-     2020: ISBN 149207294X<br>
-     <a href='https://www.google.com/books/edition/Practical_Statistics_for_Data_Scientists/F2bcDwAAQBAJ?hl=en'>Google books</a>,
-     <a href="https://www.amazon.com/Practical-Statistics-Data-Scientists-Essential/dp/149207294X?&_encoding=UTF8&tag=petergedeck-20&linkCode=ur2&linkId=01266bb457a44268bc7efdb80d6c7312&camp=1789&creative=9325">Amazon</a>
+    <td><img src='images/SPD-english.png' width=200></td>
+    <td>English (Indian subcontinent &amp; select countries only):<br>
+     AI-Assisted Statistics for Data Scientists: 50+ Essential Concepts Using R And Python, Third Edition<br>
+     2021: ISBN 978-9-368-08069-5, Shroff Publishers and Distributors Pvt. Ltd.
+     <br>
+     <!-- <a href='https://www.google.com/books/edition/'>Google books</a>, -->
+     <a href='https://www.shroffpublishers.com/books/9789368080695/'>Order here</a>
     </td>
   </tr>
-</table> -->
+</table>
+
+
 
 
 ## See also
