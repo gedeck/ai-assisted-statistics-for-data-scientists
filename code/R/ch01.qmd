@@ -6,7 +6,6 @@ format: html
 #| include: FALSE
 knitr::opts_chunk$set(echo = TRUE, cache = TRUE, autodep = TRUE, fig.align = "center")
 ```
-
 ```{r paged.print=FALSE}
 #| cache: FALSE
 #| message: FALSE

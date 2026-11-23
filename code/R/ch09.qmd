@@ -2,8 +2,14 @@
 title: "Chapter 9: Deep Learning"
 format: html
 ---
-
+```{r setup}
+#| include: FALSE
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, autodep = TRUE, fig.align = "center")
+```
 ```{r paged.print=FALSE}
+#| message: FALSE
+#| warning: FALSE
+
 set.seed(123)
 
 # Location of the data files. Adjust this path if you keep the data
