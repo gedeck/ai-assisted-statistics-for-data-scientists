@@ -6,7 +6,6 @@ format: html
 #| include: FALSE
 knitr::opts_chunk$set(echo = TRUE, cache = TRUE, autodep = TRUE, fig.align = "center")
 ```
-
 ```{r paged.print=FALSE}
 #| cache: FALSE
 #| message: FALSE
@@ -78,8 +77,6 @@ sp500_px <- read_csv(file.path(DATA_DIR, "sp500_data.csv.gz"), show_col_types = 
 
 nflx <- sp500_px[, "NFLX"]
 nflx <- diff(log(nflx[nflx > 0]))
-qqnorm(nflx)
-abline(a = 0, b = 1, col = "grey")
 ggplot(tibble(y = nflx), aes(sample = y)) +
   geom_qq() +
   geom_qq_line() +

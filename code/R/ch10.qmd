@@ -2,8 +2,13 @@
 title: "Chapter 10: Generative AI and Large Language Models (LLMs)"
 format: html
 ---
-
+```{r setup}
+#| include: FALSE
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, autodep = TRUE, fig.align = "center")
+```
 ```{r paged.print=FALSE}
+#| message: FALSE
+#| warning: FALSE
 
 set.seed(123)
 

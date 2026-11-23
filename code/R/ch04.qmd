@@ -74,7 +74,7 @@ step_lm
 ```
 #### Weighted Regression
 ```{r paged.print=FALSE}
-house$Year <- year(parse_date_time(house$DocumentDate, "m/d/y"))
+house$Year <- year(parse_date_time(house$DocumentDate, "Y-m-d"))
 house$Weight <- house$Year - 2005
 ```
 ```{r paged.print=FALSE}
